@@ -1,4 +1,4 @@
-package org.anita.adventofcode.year2018.day2;
+package org.anita.adventofcode.year2018;
 
 import java.util.List;
 

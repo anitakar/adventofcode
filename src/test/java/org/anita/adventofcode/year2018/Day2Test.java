@@ -1,4 +1,4 @@
-package org.anita.adventofcode.year2018.day2;
+package org.anita.adventofcode.year2018;
 
 import org.anita.adventofcode.util.FileUtils;
 import org.junit.Assert;

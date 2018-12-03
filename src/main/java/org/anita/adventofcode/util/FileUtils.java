@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class FileUtils {
 
@@ -30,4 +31,17 @@ public class FileUtils {
         }
         return result;
     }
+
+    public static <T> List<T> readElements(InputStream inputStream, Function<String, T> lineParser) throws IOException {
+        List<T> result = new ArrayList<>();
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while((line = bufferedReader.readLine()) != null) {
+                result.add(lineParser.apply(line));
+            }
+        }
+        return result;
+    }
+
+
 }

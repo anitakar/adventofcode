@@ -1,6 +1,7 @@
-package org.anita.adventofcode.year2018.day1;
+package org.anita.adventofcode.year2018;
 
 import org.anita.adventofcode.util.FileUtils;
+import org.anita.adventofcode.year2018.Day1;
 import org.junit.Assert;
 import org.junit.Test;
 

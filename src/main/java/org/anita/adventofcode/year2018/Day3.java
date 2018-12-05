@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class Day3 {
 
-    public static String claimRegex = "#(\\d+) @ (\\d+),(\\d+): (\\d+)x(\\d+)";
+    public static String claimRegex = "^#(\\d+) @ (\\d+),(\\d+): (\\d+)x(\\d+)$";
     private Pattern claimPattern = Pattern.compile(claimRegex);
 
     public int task1(List<Claim> claims) {

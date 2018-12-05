@@ -6,9 +6,9 @@ import java.util.regex.Pattern;
 
 public class Day4 {
 
-    public static String startsShiftRegex = "\\[\\d\\d\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d\\] Guard #(\\d+) begins shift";
-    public static String fallsAsleepRegex = "\\[\\d\\d\\d\\d-\\d\\d-\\d\\d \\d\\d:(\\d\\d)\\] falls asleep";
-    public static String wakesUpRegex = "\\[\\d\\d\\d\\d-\\d\\d-\\d\\d \\d\\d:(\\d\\d)\\] wakes up";
+    public static String startsShiftRegex = "^\\[\\d\\d\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d\\] Guard #(\\d+) begins shift$";
+    public static String fallsAsleepRegex = "^\\[\\d\\d\\d\\d-\\d\\d-\\d\\d \\d\\d:(\\d\\d)\\] falls asleep$";
+    public static String wakesUpRegex = "^\\[\\d\\d\\d\\d-\\d\\d-\\d\\d \\d\\d:(\\d\\d)\\] wakes up$";
 
     private Pattern startsShiftPattern = Pattern.compile(startsShiftRegex);
     private Pattern fallsAsleepPattern = Pattern.compile(fallsAsleepRegex);

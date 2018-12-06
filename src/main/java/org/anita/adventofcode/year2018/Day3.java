@@ -6,9 +6,6 @@ import java.util.regex.Pattern;
 
 public class Day3 {
 
-    public static String claimRegex = "^#(\\d+) @ (\\d+),(\\d+): (\\d+)x(\\d+)$";
-    private Pattern claimPattern = Pattern.compile(claimRegex);
-
     public int task1(List<Claim> claims) {
         int maxHeight = 0, maxWidth = 0;
         for (Claim claim : claims) {
@@ -71,9 +68,6 @@ public class Day3 {
         public int width;
         public int height;
 
-        public Claim() {
-        }
-
         public Claim(int id, int left, int top, int width, int height) {
             this.id = id;
             this.left = left;
@@ -82,6 +76,9 @@ public class Day3 {
             this.height = height;
         }
     }
+
+    public static String claimRegex = "^#(\\d+) @ (\\d+),(\\d+): (\\d+)x(\\d+)$";
+    private Pattern claimPattern = Pattern.compile(claimRegex);
 
     public Claim parseClaim(String line) {
         Matcher matcher = claimPattern.matcher(line);

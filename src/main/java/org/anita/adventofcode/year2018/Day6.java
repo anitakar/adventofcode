@@ -194,10 +194,6 @@ public class Day6 {
         System.out.println("---------------------------");
     }
 
-    private boolean isOnBoundary(Point x) {
-        return x.x == minX || x.x == maxX || x.y == minY || x.y == maxY;
-    }
-
     private boolean isOutsideAreaPoint(Point x) {
         return x.x < minX || x.x > maxX || x.y < minY || x.y > maxY;
     }

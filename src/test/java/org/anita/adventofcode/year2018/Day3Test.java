@@ -39,7 +39,7 @@ public class Day3Test {
     public void task1() throws IOException {
         Day3 day3 = new Day3();
         InputStream inputStream = getClass().getResourceAsStream("/claims.txt");
-        List<Day3.Claim> claims = FileUtils.readElements(inputStream, day3::parseClaim);
+        List<Day3.Claim> claims = FileUtils.readElementsLineByLine(inputStream, day3::parseClaim);
 
         Assert.assertEquals(97218, new Day3().task1(claims));
     }
@@ -59,7 +59,7 @@ public class Day3Test {
     public void task2() throws IOException {
         Day3 day3 = new Day3();
         InputStream inputStream = getClass().getResourceAsStream("/claims.txt");
-        List<Day3.Claim> claims = FileUtils.readElements(inputStream, day3::parseClaim);
+        List<Day3.Claim> claims = FileUtils.readElementsLineByLine(inputStream, day3::parseClaim);
 
         Assert.assertEquals(717, new Day3().task2(claims));
     }

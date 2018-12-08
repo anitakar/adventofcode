@@ -29,7 +29,7 @@ public class Day6Test {
     public void task1() throws IOException {
         Day6 day6 = new Day6();
         InputStream inputStream = getClass().getResourceAsStream("/coordinates.txt");
-        List<Day6.Point> points = FileUtils.readElements(inputStream, day6::parsePoint);
+        List<Day6.Point> points = FileUtils.readElementsLineByLine(inputStream, day6::parsePoint);
 
         Assert.assertEquals(3933, new Day6().task1(points));
     }
@@ -43,7 +43,7 @@ public class Day6Test {
     public void task2() throws IOException {
         Day6 day6 = new Day6();
         InputStream inputStream = getClass().getResourceAsStream("/coordinates.txt");
-        List<Day6.Point> points = FileUtils.readElements(inputStream, day6::parsePoint);
+        List<Day6.Point> points = FileUtils.readElementsLineByLine(inputStream, day6::parsePoint);
 
         Assert.assertEquals(41145, new Day6().task2(points, 10000));
     }

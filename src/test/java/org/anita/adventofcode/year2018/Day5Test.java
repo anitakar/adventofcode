@@ -18,7 +18,7 @@ public class Day5Test {
     @Test
     public void task1() throws IOException {
         InputStream inputStream = getClass().getResourceAsStream("/polymer.txt" );
-        List<String> lines = FileUtils.readStringssLineByLine(inputStream);
+        List<String> lines = FileUtils.readStringsLineByLine(inputStream);
 
         Assert.assertEquals(11264, new Day5().task1(lines.get(0)));
     }
@@ -31,7 +31,7 @@ public class Day5Test {
     @Test
     public void task2() throws IOException {
         InputStream inputStream = getClass().getResourceAsStream("/polymer.txt" );
-        List<String> lines = FileUtils.readStringssLineByLine(inputStream);
+        List<String> lines = FileUtils.readStringsLineByLine(inputStream);
 
         Assert.assertEquals(4552, new Day5().task2(lines.get(0)));
     }

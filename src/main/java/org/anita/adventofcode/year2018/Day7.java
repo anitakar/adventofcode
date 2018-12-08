@@ -85,7 +85,7 @@ public class Day7 {
     public static String dependencyRegex = "^Step (\\w) must be finished before step (\\w) can begin.$";
     private Pattern dependencyPattern = Pattern.compile(dependencyRegex);
 
-    public boolean parseDependency(String line) {
+    public void parseDependency(String line) {
         Matcher matcher = dependencyPattern.matcher(line);
         if (matcher.find()) {
             char dependency = matcher.group(1).toCharArray()[0];
@@ -93,8 +93,6 @@ public class Day7 {
             steps[step - 'A'].prereq.add(dependency);
             steps[step - 'A'].available = true;
             steps[dependency - 'A'].available = true;
-            return true;
         }
-        return false;
     }
 }

@@ -39,7 +39,7 @@ public class Day4Test {
     @Test
     public void task1() throws IOException {
         InputStream inputStream = getClass().getResourceAsStream("/sleeplog.txt" );
-        List<String> lines = FileUtils.readStringssLineByLine(inputStream);
+        List<String> lines = FileUtils.readStringsLineByLine(inputStream);
 
         Assert.assertEquals(48680, new Day4().task1(lines));
     }
@@ -52,7 +52,7 @@ public class Day4Test {
     @Test
     public void task2() throws IOException {
         InputStream inputStream = getClass().getResourceAsStream("/sleeplog.txt" );
-        List<String> lines = FileUtils.readStringssLineByLine(inputStream);
+        List<String> lines = FileUtils.readStringsLineByLine(inputStream);
 
         Assert.assertEquals(94826, new Day4().task2(lines));
     }

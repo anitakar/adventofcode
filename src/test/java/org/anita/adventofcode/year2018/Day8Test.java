@@ -17,7 +17,7 @@ public class Day8Test {
 
     @Test
     public void task1() throws IOException, URISyntaxException {
-        Assert.assertEquals(41849, new Day8().task1(FileUtils.readElementsFromLine("/tree.txt")));
+        Assert.assertEquals(41849, new Day8().task1(FileUtils.readIntsFromSingleLine("/tree.txt")));
     }
 
     @Test
@@ -27,6 +27,6 @@ public class Day8Test {
 
     @Test
     public void task2() throws IOException, URISyntaxException {
-        Assert.assertEquals(32487, new Day8().task2(FileUtils.readElementsFromLine("/tree.txt")));
+        Assert.assertEquals(32487, new Day8().task2(FileUtils.readIntsFromSingleLine("/tree.txt")));
     }
 }

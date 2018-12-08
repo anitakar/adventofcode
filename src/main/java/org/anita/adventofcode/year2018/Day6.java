@@ -61,21 +61,24 @@ public class Day6 {
                     pointsQueue.add(neigh);
                 }
             }
-
-            //printWinners(winners);
-            //printDistances(minLen);
         }
 
-        //printWinners(winners);
-        //printDistances(minLen);
         Set<Point> infinityPoints = new HashSet<>();
         for (int x = 0; x <= maxX - minX; ++x) {
-            infinityPoints.addAll((HashSet<Point>)winners[x][0]);
-            infinityPoints.addAll((HashSet<Point>)winners[x][maxY-minY]);
+            if (((HashSet<Point>)winners[x][0]).size() == 1) {
+                infinityPoints.addAll((HashSet<Point>) winners[x][0]);
+            }
+            if (((HashSet<Point>)winners[x][maxY-minY]).size() == 1) {
+                infinityPoints.addAll((HashSet<Point>) winners[x][maxY-minY]);
+            }
         }
         for (int y = 0; y <= maxY - minY; ++y) {
-            infinityPoints.addAll((HashSet<Point>)winners[0][y]);
-            infinityPoints.addAll((HashSet<Point>)winners[maxX-minX][y]);
+            if (((HashSet<Point>)winners[0][y]).size() == 1) {
+                infinityPoints.addAll((HashSet<Point>) winners[0][y]);
+            }
+            if (((HashSet<Point>)winners[maxX-minX][y]).size() == 1) {
+                infinityPoints.addAll((HashSet<Point>) winners[maxX-minX][y]);
+            }
         }
 
         Map<String, Long> winnersTotal = new HashMap<>();

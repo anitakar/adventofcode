@@ -3,10 +3,19 @@ package org.anita.adventofcode.year2018;
 import java.util.*;
 
 public class Day8 {
-    int totalSum = 0;
 
     public int task1(Iterator<Integer> stream) {
         Node root = readNode(stream);
+        int totalSum = 0;
+        Deque<Node> stack = new ArrayDeque<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            Node node = stack.poll();
+            totalSum += node.metadata.stream().mapToInt(i -> i).sum();
+            for (Node child : node.children) {
+                stack.push(child);
+            }
+        }
         return totalSum;
     }
 
@@ -41,7 +50,6 @@ public class Day8 {
         for (int i = 0; i < metadataNum; ++i) {
             int metadata = stream.next();
             node.metadata.add(metadata);
-            totalSum += metadata;
         }
         return node;
     }

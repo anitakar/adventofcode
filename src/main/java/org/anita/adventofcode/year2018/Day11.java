@@ -47,21 +47,34 @@ public class Day11 {
             }
         }
 
+        int[][] xSoFar = new int[301][301];
+        int[][] ySoFar = new int[301][301];
+        for (int x = 1; x <= 300; ++x) {
+            for (int y = 1; y <= 300; ++y) {
+                xSoFar[x][y] = xSoFar[x - 1][y] + powerLevels[x - 1][y - 1];
+            }
+        }
+        for (int y = 1; y <= 300; ++y) {
+            for (int x = 1; x <= 300; ++x) {
+                ySoFar[x][y] = ySoFar[x][y - 1] + powerLevels[x - 1][y - 1];
+            }
+        }
+
         int maxSum = Integer.MIN_VALUE;
         int maxX = 0, maxY = 0, maxSize = 0;
-        for (int x = 0; x < 300; ++x) {
-            for (int y = 0; y < 300; ++y) {
-                for (int size = 1; size < Math.min(300 - x, 300 - y); ++size) {
-                    int sum = 0;
-                    for (int i = 0; i < size; ++i) {
-                        for (int j = 0; j < size; ++j) {
-                            sum += powerLevels[x + i][y + j];
-                        }
+        for (int x = 1; x <= 300; ++x) {
+            for (int y = 1; y <= 300; ++y) {
+                int sum = 0;
+                for (int size = 1; size < Math.min(301 - x, 301 - y); ++size) {
+                    if (size == 1) {
+                        sum = powerLevels[x - 1][y - 1];
+                    } else {
+                        sum += (xSoFar[x + size - 1][y + size - 1] - xSoFar[x - 1][y + size - 1] + ySoFar[x + size - 1][y + size - 1] - ySoFar[x + size - 1][y - 1] - powerLevels[x + size - 2][y + size - 2]);
                     }
                     if (sum > maxSum) {
                         maxSum = sum;
-                        maxX = x + 1;
-                        maxY = y + 1;
+                        maxX = x;
+                        maxY = y;
                         maxSize = size;
                     }
                 }

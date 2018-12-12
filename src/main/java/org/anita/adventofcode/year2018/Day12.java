@@ -22,10 +22,6 @@ public class Day12 {
                 }
             }
             initialState = new String(after);
-            if (i % 1000000 == 0) {
-                System.out.println(System.currentTimeMillis() - startTime);
-                System.out.println(i);
-            }
         }
         int result = 0;
         for (int i = 0; i < initialState.length(); ++i) {

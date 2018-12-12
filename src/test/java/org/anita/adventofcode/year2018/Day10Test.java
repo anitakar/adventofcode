@@ -15,6 +15,10 @@ public class Day10Test {
         InputStream inputStream = getClass().getResourceAsStream("/testday10.txt");
         List<Day10.PositionAndVelocity> pvs = FileUtils.readElementsLineByLine(inputStream, day10::parsePointAndVelocity);
 
+        // programatically, iterate while height gets lower
+        // the solution is one before height starts getting higher again
+        // return the solution as string
+        // compare to make assertion
         day10.task1(pvs, 4);
     }
 

@@ -1,5 +1,6 @@
 package org.anita.adventofcode.year2018;
 
+import org.anita.adventofcode.structures.Position;
 import org.anita.adventofcode.util.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class Day13Test {
         InputStream inputStream = getClass().getResourceAsStream("/test1carts.txt");
         List<String> map = FileUtils.readStringsLineByLine(inputStream);
 
-        Assert.assertEquals(new Day13.Position(0, 3), new Day13(map).task1());
+        Assert.assertEquals(new Position(0, 3), new Day13(map).task1());
     }
 
     @Test
@@ -23,7 +24,7 @@ public class Day13Test {
         InputStream inputStream = getClass().getResourceAsStream("/test2carts.txt");
         List<String> map = FileUtils.readStringsLineByLine(inputStream);
 
-        Assert.assertEquals(new Day13.Position(7, 3), new Day13(map).task1());
+        Assert.assertEquals(new Position(7, 3), new Day13(map).task1());
     }
 
     @Test
@@ -31,7 +32,7 @@ public class Day13Test {
         InputStream inputStream = getClass().getResourceAsStream("/carts.txt");
         List<String> map = FileUtils.readStringsLineByLine(inputStream);
 
-        Assert.assertEquals(new Day13.Position(119, 41), new Day13(map).task1());
+        Assert.assertEquals(new Position(119, 41), new Day13(map).task1());
     }
 
     @Test
@@ -39,7 +40,7 @@ public class Day13Test {
         InputStream inputStream = getClass().getResourceAsStream("/test3carts.txt");
         List<String> map = FileUtils.readStringsLineByLine(inputStream);
 
-        Assert.assertEquals(new Day13.Position(6, 4), new Day13(map).task2());
+        Assert.assertEquals(new Position(6, 4), new Day13(map).task2());
     }
 
     @Test
@@ -47,7 +48,7 @@ public class Day13Test {
         InputStream inputStream = getClass().getResourceAsStream("/carts.txt");
         List<String> map = FileUtils.readStringsLineByLine(inputStream);
 
-        Assert.assertEquals(new Day13.Position(45, 136), new Day13(map).task2());
+        Assert.assertEquals(new Position(45, 136), new Day13(map).task2());
     }
 
 }

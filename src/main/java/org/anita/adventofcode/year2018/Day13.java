@@ -1,8 +1,9 @@
 package org.anita.adventofcode.year2018;
 
+import org.anita.adventofcode.structures.Position;
+
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.TreeMap;
 
 public class Day13 {
@@ -188,46 +189,6 @@ public class Day13 {
                     nextTurn = nextTurn % 3;
                 }
             }
-        }
-    }
-
-    public static class Position implements Comparable<Position> {
-        int x, y;
-
-        public Position(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Position position = (Position) o;
-            return x == position.x &&
-                    y == position.y;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(x, y);
-        }
-
-        @Override
-        public String toString() {
-            return "Position{" +
-                    "x=" + x +
-                    ", y=" + y +
-                    '}';
-        }
-
-        @Override
-        public int compareTo(Position o) {
-            int diffy = y - o.y;
-            if (diffy != 0) {
-                return diffy;
-            }
-            return x - o.x;
         }
     }
 }

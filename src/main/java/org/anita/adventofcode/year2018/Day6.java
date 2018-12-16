@@ -28,7 +28,7 @@ public class Day6 {
 
         for (Point p : points) {
             pointsQueue.add(p);
-            winners[p.x - minX][p.y - minY] = new HashSet<>(Arrays.asList(p));
+            winners[p.x - minX][p.y - minY] = new HashSet<>(Collections.singletonList(p));
             minLen[p.x - minX][p.y - minY] = 0;
         }
 

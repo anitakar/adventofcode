@@ -38,8 +38,9 @@ public class Day15 {
     public int task1() {
         int round = 1;
         while (true) {
-            Collection<Unit> currentUnits = new ArrayList<>(this.units.values());
-            for (Unit unit : currentUnits) {
+            ArrayList<Unit> currentUnits = new ArrayList<>(this.units.values());
+            for (int i = 0; i < currentUnits.size(); ++i) {
+                Unit unit = currentUnits.get(i);
                 if (!unit.isAlive()) {
                     units.remove(unit.position);
                     continue;
@@ -51,23 +52,13 @@ public class Day15 {
                 }
                 units.remove(curPosition);
                 units.put(new Position(unit.position.x, unit.position.y), unit);
-            }
-
-            int elvesHitPoints = 0;
-            int goblinsHitPoints = 0;
-            for (Position position : units.keySet()) {
-                Unit unit = this.units.get(position);
-                if (unit.type == 'E' && unit.hitPoints > 0) {
-                    elvesHitPoints += unit.hitPoints;
-                } else if (unit.type == 'G' && unit.hitPoints > 0){
-                    goblinsHitPoints += unit.hitPoints;
+                if (units.values().stream().filter(u -> u.type == unit.type).count() == units.size()) {
+                    if (i == currentUnits.size() - 1) {
+                        return round * totalPoints();
+                    } else {
+                        return (round - 1) * totalPoints();
+                    }
                 }
-            }
-            if (elvesHitPoints == 0 || goblinsHitPoints == 0) {
-                System.out.println(round);
-                printMap();
-                printUnits();
-                return round * Math.max(elvesHitPoints, goblinsHitPoints);
             }
 
             System.out.println(round);
@@ -75,6 +66,16 @@ public class Day15 {
             printUnits();
             round += 1;
         }
+    }
+
+    public int totalPoints() {
+        int sum = 0;
+        for (Unit unit : units.values()) {
+            if (unit.isAlive()) {
+                sum += unit.hitPoints;
+            }
+        }
+        return sum;
     }
 
     public void printMap() {

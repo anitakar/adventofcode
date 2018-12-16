@@ -2,7 +2,6 @@ package org.anita.adventofcode.year2018;
 
 import org.anita.adventofcode.util.FileUtils;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -64,7 +63,7 @@ public class Day15Test {
         InputStream inputStream = getClass().getResourceAsStream("/test7fightmap.txt");
         List<String> map = FileUtils.readStringsLineByLine(inputStream);
 
-        Assert.assertEquals(18740, new Day15(map).task1());
+        Assert.assertEquals(27828, new Day15(map).task1());
     }
 
     @Test
@@ -72,6 +71,6 @@ public class Day15Test {
         InputStream inputStream = getClass().getResourceAsStream("/fightmap.txt");
         List<String> map = FileUtils.readStringsLineByLine(inputStream);
 
-        Assert.assertEquals(27730, new Day15(map).task1());
+        Assert.assertEquals(242248, new Day15(map).task1());
     }
 }

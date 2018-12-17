@@ -53,6 +53,9 @@ public class Day15 {
                 units.remove(curPosition);
                 units.put(new Position(unit.position.x, unit.position.y), unit);
                 if (units.values().stream().filter(u -> u.type == unit.type).count() == units.size()) {
+                    System.out.println(round);
+                    printMap();
+                    printUnits();
                     if (i == currentUnits.size() - 1) {
                         return round * totalPoints();
                     } else {

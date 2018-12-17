@@ -67,6 +67,22 @@ public class Day15Test {
     }
 
     @Test
+    public void task1Test8() throws IOException {
+        InputStream inputStream = getClass().getResourceAsStream("/test8fightmap.txt");
+        List<String> map = FileUtils.readStringsLineByLine(inputStream);
+
+        Assert.assertEquals(16533, new Day15(map).task1());
+    }
+
+    @Test
+    public void task1Test9() throws IOException {
+        InputStream inputStream = getClass().getResourceAsStream("/test9fightmap.txt");
+        List<String> map = FileUtils.readStringsLineByLine(inputStream);
+
+        Assert.assertEquals(134, new Day15(map).task1());
+    }
+
+    @Test
     public void task1() throws IOException {
         InputStream inputStream = getClass().getResourceAsStream("/fightmap.txt");
         List<String> map = FileUtils.readStringsLineByLine(inputStream);

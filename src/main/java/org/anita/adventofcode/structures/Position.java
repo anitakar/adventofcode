@@ -35,6 +35,28 @@ public class Position implements Comparable<Position> {
         return new Position(x + 1, y);
     }
 
+    public Position upLeft() {
+        return new Position(x - 1, y - 1);
+    }
+
+    public Position upRight() {
+        return new Position(x + 1, y - 1);
+    }
+
+    public Position downLeft() {
+        return new Position(x - 1, y + 1);
+    }
+
+    public Position downRight() {
+        return new Position(x + 1, y + 1);
+    }
+
+    public Position[] allNeighbours() {
+        return new Position[] {
+                up(), down(), left(), right(), upLeft(), upRight(), downLeft(), downRight()
+        };
+    }
+
     public int manhattanDistance(Position other) {
         return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
     }

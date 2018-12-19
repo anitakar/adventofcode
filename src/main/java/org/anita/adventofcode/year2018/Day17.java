@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Day17 {
 
@@ -27,26 +28,32 @@ public class Day17 {
 
     public Day17(List<String> lines) {
         parseMap(lines);
-        printMap();
     }
 
     public int task1() {
         while (true) {
-            drops.put(new Position(500, 0), new Drop(new Position(500, 0), '|'));
+            drops.put(new Position(500, 1), new Drop(new Position(500, 1), '|'));
+            int prevDropsSize = drops.size();
 
-            ArrayList<Drop> currentDrops = new ArrayList<>(this.drops.values());
+            List<Drop> currentDrops = new ArrayList<>(this.drops.values());
+            currentDrops = currentDrops.stream().filter(d -> d.type == '|').collect(Collectors.toList());
             for (int i = 0; i < currentDrops.size(); ++i) {
                 Drop drop = currentDrops.get(i);
                 Position curPosition = new Position(drop.position.x, drop.position.y);
                 drop.move();
-                if (drop.isBelow()) {
-                    return currentDrops.size();
-                }
                 drops.remove(curPosition);
-                drops.put(new Position(drop.position.x, drop.position.y), drop);
+                if (drop.type == '|' && !drop.isBelow()) {
+                    drops.put(new Position(curPosition.x, curPosition.y), new Drop(new Position(curPosition.x, curPosition.y), '|'));
+                }
+                if (!drop.isBelow()) {
+                    drops.put(new Position(drop.position.x, drop.position.y), drop);
+                }
             }
 
-            printMap();
+            if (prevDropsSize == drops.size()) {
+                printMap();
+                return drops.size();
+            }
         }
     }
 
@@ -79,6 +86,8 @@ public class Day17 {
                 }
             }
         }
+        maxx += 1;
+        minx -= 1;
         map = new char[maxx - minx + 1][maxy - miny + 1];
         for (int x = 0; x < map.length; ++x) {
             for (int y = 0; y < map[0].length; ++y) {
@@ -132,24 +141,61 @@ public class Day17 {
             this.type = type;
         }
 
-        public void move() {
+        public boolean move() {
+            if (isSettled()) {
+                return false;
+            }
+
             Position down = position.down();
-            if (map[down.x - minx][down.y - miny] == '.' && !drops.containsKey(down)) {
+            if (down.y > maxy || (map[down.x - minx][down.y - miny] == '.' && !drops.containsKey(down))) {
                 position = down;
-                return;
+            } else {
+                Position below = position.down();
+                if (map[below.x - minx][below.y - miny] == '#' || (drops.containsKey(below) && drops.get(below).type == '~')) {
+                    int leftEnd = -1, rightEnd = -1;
+                    boolean rightSpilling = false;
+                    for (int x = position.x + 1; x < maxx; ++x) {
+                        if (map[x - minx][position.y - miny] == '#') {
+                            rightEnd = x;
+                            break;
+                        } else if (map[x - minx][position.y - miny + 1] != '#') {
+                            Position justBelow = new Position(x, position.y + 1);
+                            if (!drops.containsKey(justBelow) || drops.get(justBelow).type != '~') {
+                                rightEnd = x + 1;
+                                rightSpilling = true;
+                                break;
+                            }
+                        }
+                    }
+                    boolean leftSpilling = false;
+                    for (int x = position.x - 1; x > minx; --x) {
+                        if (map[x - minx][position.y - miny] == '#') {
+                            leftEnd = x;
+                            break;
+                        } else if (map[x - minx][position.y - miny + 1] == '.') {
+                            Position justBelow = new Position(x, position.y + 1);
+                            if (!drops.containsKey(justBelow) || drops.get(justBelow).type != '~') {
+                                leftEnd = x - 1;
+                                leftSpilling = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (rightEnd != -1 && leftEnd != -1) {
+                        char dropType = (leftSpilling || rightSpilling) ? '|' : '~';
+                        this.type = dropType;
+                        for (int x = leftEnd + 1; x < rightEnd; ++x) {
+                            drops.put(new Position(x, position.y), new Drop(new Position(x, position.y), dropType));
+                        }
+                        return true;
+                    }
+                }
             }
-            Position left = position.left();
-            if (map[left.x - minx][left.y - miny] == '.' && !drops.containsKey(left)) {
-                position = left;
-                type = '~';
-                return;
-            }
-            Position right = position.left();
-            if (map[right.x - minx][right.y - miny] == '.' && !drops.containsKey(right)) {
-                position = right;
-                type = '~';
-                return;
-            }
+            return false;
+        }
+
+        public boolean isSettled() {
+            return type == '~';
         }
 
         public boolean isBelow() {

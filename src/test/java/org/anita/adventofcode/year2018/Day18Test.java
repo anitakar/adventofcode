@@ -48,5 +48,7 @@ public class Day18Test {
         Assert.assertEquals(209951, new Day18(map).task1(16000));
 
         Assert.assertEquals(6, ((1000000000 - 2000) / 1000) % 7);
+
+        //Assert.assertEquals(211653, new Day18(map).task1(1000000000));
     }
 }

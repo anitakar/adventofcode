@@ -17,4 +17,12 @@ public class Day17Test {
 
         Assert.assertEquals(57, new Day17(map).task1());
     }
+
+    @Test
+    public void task1() throws IOException {
+        InputStream inputStream = getClass().getResourceAsStream("/water.txt");
+        List<String> map = FileUtils.readStringsLineByLine(inputStream);
+
+        Assert.assertEquals(39592, new Day17(map).task1());
+    }
 }

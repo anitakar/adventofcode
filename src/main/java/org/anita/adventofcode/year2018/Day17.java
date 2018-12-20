@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 public class Day17 {
 
     int maxx = 500, maxy = 0, minx = 500, miny = 0;
+    int realMinY = Integer.MAX_VALUE;
     char[][] map;
     TreeMap<Position, Drop> drops = new TreeMap<>(new Comparator<Position>() {
         @Override
@@ -28,10 +29,13 @@ public class Day17 {
 
     public Day17(List<String> lines) {
         parseMap(lines);
+        //printMap();
     }
 
-    public int task1() {
+    public long task1() {
+        int time = 0;
         while (true) {
+            time += 1;
             drops.put(new Position(500, 1), new Drop(new Position(500, 1), '|'));
             int prevDropsSize = drops.size();
 
@@ -49,12 +53,19 @@ public class Day17 {
                     drops.put(new Position(drop.position.x, drop.position.y), drop);
                 }
             }
+            //System.out.println(time);
+            //printMap();
 
             if (prevDropsSize == drops.size()) {
                 printMap();
-                return drops.size();
+                return drops.values().stream().filter(v -> v.position.y >= realMinY).count();
             }
         }
+    }
+
+    public long task2() {
+        task1();
+        return drops.values().stream().filter(v -> v.type == '~').count();
     }
 
     private static final String verticalRegex = "^x=(\\d+), y=(\\d+)..(\\d+)$";
@@ -73,6 +84,7 @@ public class Day17 {
                 minx = Math.min(minx, x);
                 maxy = Math.max(maxy, y2);
                 miny = Math.min(miny, y1);
+                realMinY = Math.min(realMinY, y1);
             } else {
                 Matcher horizontalMatcher = horizontalPattern.matcher(line);
                 if (horizontalMatcher.find()) {
@@ -83,6 +95,7 @@ public class Day17 {
                     miny = Math.min(miny, y);
                     maxx = Math.max(maxx, x2);
                     minx = Math.min(minx, x1);
+                    realMinY = Math.min(realMinY, y);
                 }
             }
         }
@@ -154,7 +167,7 @@ public class Day17 {
                 if (map[below.x - minx][below.y - miny] == '#' || (drops.containsKey(below) && drops.get(below).type == '~')) {
                     int leftEnd = -1, rightEnd = -1;
                     boolean rightSpilling = false;
-                    for (int x = position.x + 1; x < maxx; ++x) {
+                    for (int x = position.x + 1; x <= maxx; ++x) {
                         if (map[x - minx][position.y - miny] == '#') {
                             rightEnd = x;
                             break;
@@ -168,7 +181,7 @@ public class Day17 {
                         }
                     }
                     boolean leftSpilling = false;
-                    for (int x = position.x - 1; x > minx; --x) {
+                    for (int x = position.x - 1; x >= minx; --x) {
                         if (map[x - minx][position.y - miny] == '#') {
                             leftEnd = x;
                             break;

@@ -55,7 +55,7 @@ public class Day15 {
                 if (units.values().stream().filter(u -> u.type == unit.type).count() == units.size()) {
                     System.out.println(round);
                     printMap();
-                    printUnits();
+                    //printUnits();
                     if (i == currentUnits.size() - 1) {
                         return round * totalPoints();
                     } else {
@@ -66,7 +66,7 @@ public class Day15 {
 
             System.out.println(round);
             printMap();
-            printUnits();
+            //printUnits();
             round += 1;
         }
     }
@@ -92,7 +92,6 @@ public class Day15 {
             }
             System.out.println();
         }
-        System.out.println("-----");
     }
 
     public void printUnits() {

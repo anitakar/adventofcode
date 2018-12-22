@@ -57,6 +57,18 @@ public class Position implements Comparable<Position> {
         };
     }
 
+    public Position[] perpendicularNeighbours() {
+        return new Position[] {
+                up(), right(), down(), left()
+        };
+    }
+
+    public Position[] readingNeighbours() {
+        return new Position[] {
+                up(), left(), right(), down()
+        };
+    }
+
     public int manhattanDistance(Position other) {
         return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
     }

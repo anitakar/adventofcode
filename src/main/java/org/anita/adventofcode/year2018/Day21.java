@@ -3,7 +3,8 @@ package org.anita.adventofcode.year2018;
 import java.util.*;
 import java.util.function.BiFunction;
 
-public class Day19 {
+public class Day21 {
+
     Map<String, BiFunction<int[], int[], Integer>> operations = new HashMap<String, BiFunction<int[], int[], Integer>>();
 
     {
@@ -91,11 +92,12 @@ public class Day19 {
         return registers[op[0]] == registers[op[1]] ? 1 : 0;
     }
 
-    public int[] execute(int[] register, int instructionPointerIndex, List<Instruction> instructions) {
+    public int execute(int[] register, int instructionPointerIndex, List<Instruction> instructions) {
+        int instructionCounter = 0;
         int instructionPointer = 0;
-        while (true) {
+        while (instructionCounter < 10000000) {
             if (instructionPointer < 0 || instructionPointer >= instructions.size()) {
-                return register;
+                return instructionCounter;
             }
             register[instructionPointerIndex] = instructionPointer;
             //System.out.print("ip=" + instructionPointer + " " + Arrays.toString(register));
@@ -106,7 +108,9 @@ public class Day19 {
             //System.out.println(" " + Arrays.toString(register));
             instructionPointer = register[instructionPointerIndex];
             instructionPointer += 1;
+            ++instructionCounter;
         }
+        return Integer.MAX_VALUE;
     }
 
     public static List<Instruction> readProgram(List<String> input) {
@@ -137,5 +141,4 @@ public class Day19 {
                     '}';
         }
     }
-
 }

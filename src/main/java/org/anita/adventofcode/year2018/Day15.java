@@ -147,11 +147,15 @@ public class Day15 {
                 visited.add(cur);
 
                 for (Position neigh : neighs) {
-                    if (isTaken(neigh) && units.get(neigh).type == this.type) {
-                        continue;
-                    }
                     if (!isValidPosition(neigh)) {
                         continue;
+                    }
+                    if (isTaken(neigh)) {
+                        if (units.get(neigh).type != this.type) {
+
+                        } else {
+                            continue;
+                        }
                     }
 
                     int newMinLen = minLen[cur.x][cur.y] + 1;
@@ -177,6 +181,49 @@ public class Day15 {
             }
 
         }
+
+//        private List<Position> dijkstra(Position from, Position to) {
+//            LinkedList<Position> queue = new LinkedList<>();
+//            Set<Position> visited = new HashSet<>();
+//            queue.add(from);
+//            int minLen[][] = new int[map.length][map[0].length];
+//            for (int x = 0; x < map.length; ++ x) {
+//                for (int y = 0; y < map[0].length; ++y) {
+//                    minLen[x][y] = Integer.MAX_VALUE - 1;
+//                }
+//            }
+//            minLen[from.x][from.y] = 0;
+//            while (!queue.isEmpty()) {
+//                Position cur = queue.poll();
+//                List<Position> neighs = generateNeighbours(cur);
+//                visited.add(cur);
+//                for (Position neigh : neighs) {
+//                    if (isTaken(neigh) && units.get(neigh).type == this.type) {
+//                        continue;
+//                    }
+//                    if (!isValidPosition(neigh)) {
+//                        continue;
+//                    }
+//                    int newMinLen = minLen[cur.x][cur.y] + 1;
+//                    if (newMinLen < minLen[neigh.x][neigh.y]) {
+//                        minLen[neigh.x][neigh.y] = newMinLen;
+//                        if (units.containsKey(neigh) && units.get(neigh).type != this.type && units.get(neigh).isAlive()) {
+//
+//
+//
+//
+//                            return;
+//                        }
+//                    }
+//                }
+//
+//                for (Position neigh : neighs) {
+//                    if (!queue.contains(neigh) && !visited.contains(neigh) && isValidPosition(neigh) && !isTaken(neigh)) {
+//                        queue.add(neigh);
+//                    }
+//                }
+//            }
+//        }
 
         private boolean isValidPosition(Position pos) {
             if (pos.x < 0 || pos.x >= map.length || pos.y < 0 || pos.y >= map[0].length) {

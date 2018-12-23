@@ -37,6 +37,6 @@ public class Day23Test {
         InputStream inputStream = getClass().getResourceAsStream("/day23.txt");
         List<Day23.Nanobot> nanobots = FileUtils.readElementsLineByLine(inputStream, day23::parseNanobot);
 
-        Assert.assertEquals(7, new Day23().task1(nanobots));
+        Assert.assertEquals(595, new Day23().task1(nanobots));
     }
 }

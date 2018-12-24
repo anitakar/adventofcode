@@ -55,7 +55,7 @@ public class Day15 {
                 if (units.values().stream().filter(u -> u.type == unit.type).count() == units.size()) {
                     System.out.println(round);
                     printMap();
-                    //printUnits();
+                    printUnits();
                     if (i == currentUnits.size() - 1) {
                         return round * totalPoints();
                     } else {
@@ -66,7 +66,7 @@ public class Day15 {
 
             System.out.println(round);
             printMap();
-            //printUnits();
+            printUnits();
             round += 1;
         }
     }
@@ -101,6 +101,72 @@ public class Day15 {
         System.out.println("-----");
     }
 
+    private int dijkstra(Position from, Position to) {
+        LinkedList<Position> queue = new LinkedList<>();
+        Set<Position> visited = new HashSet<>();
+        queue.add(from);
+        int minLen[][] = new int[map.length][map[0].length];
+        for (int x = 0; x < map.length; ++x) {
+            for (int y = 0; y < map[0].length; ++y) {
+                minLen[x][y] = Integer.MAX_VALUE - 1;
+            }
+        }
+        minLen[from.x][from.y] = 0;
+        while (!queue.isEmpty()) {
+            Position cur = queue.poll();
+            List<Position> neighs = generateNeighbours(cur);
+            visited.add(cur);
+            for (Position neigh : neighs) {
+                if (!isValidPosition(neigh)) {
+                    continue;
+                }
+                if (isTaken(neigh) && !neigh.equals(to)) {
+                    continue;
+                }
+                int newMinLen = minLen[cur.x][cur.y] + 1;
+                if (newMinLen < minLen[neigh.x][neigh.y]) {
+                    minLen[neigh.x][neigh.y] = newMinLen;
+                    if (to.equals(neigh)) {
+                        return newMinLen;
+                    }
+                }
+            }
+
+            for (Position neigh : neighs) {
+                if (!queue.contains(neigh) && !visited.contains(neigh) && isValidPosition(neigh) && !isTaken(neigh)) {
+                    queue.add(neigh);
+                }
+            }
+        }
+        return Integer.MAX_VALUE - 1;
+    }
+
+    private boolean isTaken(Position pos) {
+        if (units.containsKey(pos) && units.get(pos).isAlive()) {
+            return true;
+        }
+        return false;
+    }
+
+    private List<Position> generateNeighbours(Position cur) {
+        return Arrays.asList(
+                cur.up(),
+                cur.left(),
+                cur.right(),
+                cur.down()
+        );
+    }
+
+    private boolean isValidPosition(Position pos) {
+        if (pos.x < 0 || pos.x >= map.length || pos.y < 0 || pos.y >= map[0].length) {
+            return false;
+        }
+        if (map[pos.x][pos.y] == '#') {
+            return false;
+        }
+        return true;
+    }
+
     public class Unit {
         int attackPower;
         int hitPoints;
@@ -119,8 +185,10 @@ public class Day15 {
             if (!isAlive()) {
                 return null;
             }
-            // move
-            move();
+            if (!isAttacking()) {
+                // move
+                move();
+            }
             // attack
             return attack();
         }
@@ -129,45 +197,73 @@ public class Day15 {
             return hitPoints > 0;
         }
 
+        public boolean isAttacking() {
+            for (Position neigh : generateNeighbours(this.position)) {
+                if (units.containsKey(neigh) && units.get(neigh).type != this.type) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void move() {
             LinkedList<Position> queue = new LinkedList<>();
             Set<Position> visited = new HashSet<>();
             queue.add(position);
             int minLen[][] = new int[map.length][map[0].length];
-            Position prev[][] = new Position[map.length][map[0].length];
-            for (int x = 0; x < map.length; ++ x) {
+            for (int x = 0; x < map.length; ++x) {
                 for (int y = 0; y < map[0].length; ++y) {
                     minLen[x][y] = Integer.MAX_VALUE - 1;
                 }
             }
             minLen[position.x][position.y] = 0;
+            int globalMinLen = Integer.MAX_VALUE;
+            List<Position> targets = new ArrayList<>();
             while (!queue.isEmpty()) {
                 Position cur = queue.poll();
-                List<Position> neighs = generateNeighbours(cur);
                 visited.add(cur);
-
+                List<Position> neighs = generateNeighbours(cur);
                 for (Position neigh : neighs) {
                     if (!isValidPosition(neigh)) {
                         continue;
                     }
                     if (isTaken(neigh)) {
                         if (units.get(neigh).type != this.type) {
-
+                            // found
                         } else {
                             continue;
                         }
                     }
-
                     int newMinLen = minLen[cur.x][cur.y] + 1;
                     if (newMinLen < minLen[neigh.x][neigh.y]) {
                         minLen[neigh.x][neigh.y] = newMinLen;
-                        prev[neigh.x][neigh.y] = cur;
                         if (units.containsKey(neigh) && units.get(neigh).type != this.type && units.get(neigh).isAlive()) {
-                            Position prevInPath = cur;
-                            while (prevInPath.manhattanDistance(this.position) > 1){
-                                prevInPath = prev[prevInPath.x][prevInPath.y];
+                            // we have found a target
+                            if (newMinLen < globalMinLen) {
+                                globalMinLen = newMinLen;
                             }
-                            this.position = new Position(prevInPath.x, prevInPath.y);
+                            if (newMinLen > globalMinLen) {
+                                // distances are already bigger than global minimal distance
+                                break;
+                            }
+                            targets.add(neigh);
+                        }
+                    }
+                }
+
+                if (globalMinLen != Integer.MAX_VALUE) {
+                    targets.sort(Position::compareTo);
+                    Position target = targets.get(0);
+                    List<Position> nextMoves = generateNeighbours(this.position);
+                    for (Position move : nextMoves) {
+                        if (!isValidPosition(move)) {
+                            continue;
+                        }
+                        if (isTaken(move)) {
+                            continue;
+                        }
+                        if (dijkstra(move, target) == globalMinLen - 1) {
+                            this.position = move;
                             return;
                         }
                     }
@@ -179,107 +275,18 @@ public class Day15 {
                     }
                 }
             }
-
-        }
-
-//        private List<Position> dijkstra(Position from, Position to) {
-//            LinkedList<Position> queue = new LinkedList<>();
-//            Set<Position> visited = new HashSet<>();
-//            queue.add(from);
-//            int minLen[][] = new int[map.length][map[0].length];
-//            for (int x = 0; x < map.length; ++ x) {
-//                for (int y = 0; y < map[0].length; ++y) {
-//                    minLen[x][y] = Integer.MAX_VALUE - 1;
-//                }
-//            }
-//            minLen[from.x][from.y] = 0;
-//            while (!queue.isEmpty()) {
-//                Position cur = queue.poll();
-//                List<Position> neighs = generateNeighbours(cur);
-//                visited.add(cur);
-//                for (Position neigh : neighs) {
-//                    if (isTaken(neigh) && units.get(neigh).type == this.type) {
-//                        continue;
-//                    }
-//                    if (!isValidPosition(neigh)) {
-//                        continue;
-//                    }
-//                    int newMinLen = minLen[cur.x][cur.y] + 1;
-//                    if (newMinLen < minLen[neigh.x][neigh.y]) {
-//                        minLen[neigh.x][neigh.y] = newMinLen;
-//                        if (units.containsKey(neigh) && units.get(neigh).type != this.type && units.get(neigh).isAlive()) {
-//
-//
-//
-//
-//                            return;
-//                        }
-//                    }
-//                }
-//
-//                for (Position neigh : neighs) {
-//                    if (!queue.contains(neigh) && !visited.contains(neigh) && isValidPosition(neigh) && !isTaken(neigh)) {
-//                        queue.add(neigh);
-//                    }
-//                }
-//            }
-//        }
-
-        private boolean isValidPosition(Position pos) {
-            if (pos.x < 0 || pos.x >= map.length || pos.y < 0 || pos.y >= map[0].length) {
-                return false;
-            }
-            if (map[pos.x][pos.y] == '#') {
-                return false;
-            }
-            return true;
-        }
-
-        public boolean isTaken(Position pos) {
-            if (units.containsKey(pos) && units.get(pos).isAlive()) {
-                return true;
-            }
-            return false;
-        }
-
-        private List<Position> generateNeighbours(Position cur) {
-            return Arrays.asList(
-                cur.up(),
-                cur.left(),
-                cur.right(),
-                cur.down()
-            );
         }
 
         private Unit attack() {
             int minHitPoints = Integer.MAX_VALUE;
             Unit unitToAttack = null;
-            if (units.containsKey(position.up())) {
-                Unit other = units.get(position.up());
-                if (other.type != this.type && other.isAlive() && other.hitPoints < minHitPoints) {
-                    unitToAttack = other;
-                    minHitPoints = unitToAttack.hitPoints;
-                }
-            }
-            if (units.containsKey(position.left())) {
-                Unit other = units.get(position.left());
-                if (other.type != this.type && other.isAlive() && other.hitPoints < minHitPoints) {
-                    unitToAttack = other;
-                    minHitPoints = unitToAttack.hitPoints;
-                }
-            }
-            if (units.containsKey(position.right())) {
-                Unit other = units.get(position.right());
-                if (other.type != this.type && other.isAlive() && other.hitPoints < minHitPoints) {
-                    unitToAttack = other;
-                    minHitPoints = unitToAttack.hitPoints;
-                }
-            }
-            if (units.containsKey(position.down())) {
-                Unit other = units.get(position.down());
-                if (other.type != this.type && other.isAlive() && other.hitPoints < minHitPoints) {
-                    unitToAttack = other;
-                    minHitPoints = unitToAttack.hitPoints;
+            for (Position neigh : generateNeighbours(this.position)) {
+                if (units.containsKey(neigh)) {
+                    Unit other = units.get(neigh);
+                    if (other.type != this.type && other.isAlive() && other.hitPoints < minHitPoints) {
+                        unitToAttack = other;
+                        minHitPoints = unitToAttack.hitPoints;
+                    }
                 }
             }
             if (unitToAttack != null) {
@@ -293,7 +300,7 @@ public class Day15 {
 
         @Override
         public String toString() {
-            return "Unit{" +
+            return "Group{" +
                     "attackPower=" + attackPower +
                     ", hitPoints=" + hitPoints +
                     ", type=" + type +

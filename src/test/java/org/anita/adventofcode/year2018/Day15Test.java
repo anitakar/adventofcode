@@ -87,6 +87,6 @@ public class Day15Test {
         InputStream inputStream = getClass().getResourceAsStream("/fightmap.txt");
         List<String> map = FileUtils.readStringsLineByLine(inputStream);
 
-        Assert.assertEquals(247450, new Day15(map).task1());
+        Assert.assertEquals(242248, new Day15(map).task1());
     }
 }

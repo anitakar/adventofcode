@@ -9,9 +9,9 @@ public class Day24 {
 
     private List<Group> groups = new ArrayList<>();
 
-    public int combat(List<Group> groups) {
+    public int combat() {
         this.groups = groups;
-        printBattle(groups);
+        //printBattle(groups);
 
         while (true) {
             battle();
@@ -23,6 +23,22 @@ public class Day24 {
         }
 
         return groups.stream().mapToInt(u -> u.numberOfUnits).sum();
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
+    public void boostAttack(int boost, String unitType) {
+        groups.stream().filter(g -> g.type.equals(unitType)).forEach(g -> g.damage = g.damage + boost);
+    }
+
+    public String winner() {
+        return groups.get(0).type;
     }
 
     private void printBattle(List<Group> groups) {
@@ -183,6 +199,21 @@ public class Day24 {
 
         public int groupInitiative() {
             return initiative;
+        }
+
+        @Override
+        protected Group clone() {
+            return new Group(
+                    this.id,
+                    this.type,
+                    this.numberOfUnits,
+                    this.hitPoints,
+                    this.weaknesses,
+                    this.immunities,
+                    this.damage,
+                    this.typeOfDamage,
+                    this.initiative
+            );
         }
 
         @Override

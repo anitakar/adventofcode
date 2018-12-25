@@ -2,6 +2,7 @@ package org.anita.adventofcode.year2018;
 
 import org.anita.adventofcode.util.FileUtils;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -62,8 +63,9 @@ public class Day24Test {
         for (int i = 0; i < infection.size(); ++i) {
             groups.add(day24.parseGroup(i + 2, "Infection", infection.get(i)));
         }
+        day24.setGroups(groups);
 
-        Assert.assertEquals(5216, new Day24().combat(groups));
+        Assert.assertEquals(5216, day24.combat());
     }
 
     @Test
@@ -81,7 +83,71 @@ public class Day24Test {
         for (int i = 0; i < infection.size(); ++i) {
             groups.add(day24.parseGroup(i + 10, "Infection", infection.get(i)));
         }
+        day24.setGroups(groups);
 
-        Assert.assertEquals(22676, new Day24().combat(groups));
+        Assert.assertEquals(22676, day24.combat());
+    }
+
+    @Test
+    @Ignore("There is possibility of draw. Groups can not kill each other because of immunities or not enough damage to kill even one unit")
+    public void task2() throws IOException {
+        Day24 day24 = new Day24();
+        InputStream inputStream = getClass().getResourceAsStream("/day24.txt");
+        List<String> lines = FileUtils.readStringsLineByLine(inputStream);
+
+        List<Day24.Group> groups = new ArrayList<>();
+        List<String> immuneSystem = lines.subList(1, 11);
+        for (int i = 0; i < immuneSystem.size(); ++i) {
+            groups.add(day24.parseGroup(i, "Immune System", immuneSystem.get(i)));
+        }
+        List<String> infection = lines.subList(13, lines.size());
+        for (int i = 0; i < infection.size(); ++i) {
+            groups.add(day24.parseGroup(i + 10, "Infection", infection.get(i)));
+        }
+
+        int boost = 1;
+        int unitsLeft = 0;
+        while (true) {
+            day24.setGroups(cloneGroups(groups));
+            day24.boostAttack(boost, "Immune System");
+            int result = day24.combat();
+            System.out.println("Boost " + boost + ", winner " + day24.winner() + ", result " + result);
+            if (day24.winner().equals("Immune System")) {
+                unitsLeft = result;
+                break;
+            }
+            boost += 1;
+        }
+
+        Assert.assertEquals(1, unitsLeft);
+    }
+
+    @Test
+    public void task2Part2() throws IOException {
+        Day24 day24 = new Day24();
+        InputStream inputStream = getClass().getResourceAsStream("/day24.txt");
+        List<String> lines = FileUtils.readStringsLineByLine(inputStream);
+
+        List<Day24.Group> groups = new ArrayList<>();
+        List<String> immuneSystem = lines.subList(1, 11);
+        for (int i = 0; i < immuneSystem.size(); ++i) {
+            groups.add(day24.parseGroup(i, "Immune System", immuneSystem.get(i)));
+        }
+        List<String> infection = lines.subList(13, lines.size());
+        for (int i = 0; i < infection.size(); ++i) {
+            groups.add(day24.parseGroup(i + 10, "Infection", infection.get(i)));
+        }
+        day24.setGroups(groups);
+        day24.boostAttack(38, "Immune System");
+
+        Assert.assertEquals(4510, day24.combat());
+    }
+
+    private List<Day24.Group> cloneGroups(List<Day24.Group> groups) {
+        List<Day24.Group> copy = new ArrayList<>();
+        for(Day24.Group group : groups) {
+            copy.add(group.clone());
+        }
+        return copy;
     }
 }

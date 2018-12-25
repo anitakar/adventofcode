@@ -52,7 +52,7 @@ public class Day24 {
             for (Group defender : groups) {
                 if (!defender.type.equals(attacker.type) && !chosenGroups.contains(defender.id)) {
                     int damage;
-                    if (defender.immunities.contains(attacker.type)) {
+                    if (defender.immunities.contains(attacker.typeOfDamage)) {
                         continue;
                     }
                     damage = attacker.effectivePower();

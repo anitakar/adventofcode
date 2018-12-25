@@ -82,6 +82,6 @@ public class Day24Test {
             groups.add(day24.parseGroup(i + 10, "Infection", infection.get(i)));
         }
 
-        Assert.assertEquals(5216, new Day24().combat(groups));
+        Assert.assertEquals(22676, new Day24().combat(groups));
     }
 }

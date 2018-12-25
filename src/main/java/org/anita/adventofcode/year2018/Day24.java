@@ -99,6 +99,7 @@ public class Day24 {
 
     private void attack(Group attacker, Group defender) {
         if (attacker.numberOfUnits <= 0) {
+            groups.remove(attacker);
             return;
         }
         int numberOfUnitsToRemove;

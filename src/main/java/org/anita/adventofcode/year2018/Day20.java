@@ -111,6 +111,18 @@ public class Day20 {
         return longestShortestPath;
     }
 
+    public int countAllPathsLargerOrEqualThan(int limit) {
+        int total = 0;
+        for (int x = 1; x < maxx - minx; x += 2) {
+            for (int y = 1; y < maxy - miny; y += 2) {
+                if (shortestPaths[x][y] >= limit) {
+                    total += 1;
+                }
+            }
+        }
+        return total;
+    }
+
     private Collection<Position> fillMap(Position position, String regex) {
         map[position.x - minx][position.y - miny] = '.';
         for (int i = 0; i < regex.length(); ++i) {

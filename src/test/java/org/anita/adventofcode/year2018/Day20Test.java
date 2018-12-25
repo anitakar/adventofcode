@@ -80,4 +80,16 @@ public class Day20Test {
         day20.findAllShortestPaths();
         Assert.assertEquals(3014, day20.getLongestShortestPathLength());
     }
+
+    @Test
+    public void task2() throws IOException {
+        InputStream inputStream = getClass().getResourceAsStream("/day20.txt");
+        String regex = FileUtils.readStringsLineByLine(inputStream).get(0);
+        regex = regex.substring(1, regex.length() - 1);
+
+        Day20 day20 = new Day20();
+        day20.readMap(regex);
+        day20.findAllShortestPaths();
+        Assert.assertEquals(8279, day20.countAllPathsLargerOrEqualThan(1000));
+    }
 }

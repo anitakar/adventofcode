@@ -3,6 +3,7 @@ package org.anita.adventofcode.year2018;
 import org.anita.adventofcode.structures.Position;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Day15 {
 
@@ -15,12 +16,12 @@ public class Day15 {
     }
 
     private void parseMap(List<String> lines) {
-        int maxy = lines.size() - 1;
+        int maxy = lines.size();
         int maxx = 0;
         for (String line : lines) {
-            maxx = Math.max(maxx, line.length() - 1);
+            maxx = Math.max(maxx, line.length());
         }
-        map = new char[maxx + 1][maxy + 1];
+        map = new char[maxx][maxy];
         int y = 0;
         for (String line : lines) {
             for (int x = 0; x < line.length(); ++x) {
@@ -35,7 +36,7 @@ public class Day15 {
         }
     }
 
-    public int task1() {
+    public long task1() {
         int round = 1;
         while (true) {
             ArrayList<Unit> currentUnits = new ArrayList<>(this.units.values());
@@ -52,7 +53,8 @@ public class Day15 {
                 }
                 units.remove(curPosition);
                 units.put(new Position(unit.position.x, unit.position.y), unit);
-                if (units.values().stream().filter(u -> u.type == unit.type).count() == units.size()) {
+                long elfCount = units.values().stream().filter(u -> u.type == 'E').count();
+                if (elfCount == units.size() || elfCount == 0) {
                     System.out.println(round);
                     printMap();
                     printUnits();
@@ -71,14 +73,8 @@ public class Day15 {
         }
     }
 
-    public int totalPoints() {
-        int sum = 0;
-        for (Unit unit : units.values()) {
-            if (unit.isAlive()) {
-                sum += unit.hitPoints;
-            }
-        }
-        return sum;
+    public long totalPoints() {
+        return units.values().stream().mapToInt(u -> u.hitPoints).sum();
     }
 
     public void printMap() {
@@ -102,13 +98,16 @@ public class Day15 {
     }
 
     private int dijkstra(Position from, Position to) {
+        if (from.equals(to)) {
+            return 0;
+        }
         LinkedList<Position> queue = new LinkedList<>();
         Set<Position> visited = new HashSet<>();
         queue.add(from);
         int minLen[][] = new int[map.length][map[0].length];
         for (int x = 0; x < map.length; ++x) {
             for (int y = 0; y < map[0].length; ++y) {
-                minLen[x][y] = Integer.MAX_VALUE - 1;
+                minLen[x][y] = Integer.MAX_VALUE;
             }
         }
         minLen[from.x][from.y] = 0;
@@ -138,7 +137,7 @@ public class Day15 {
                 }
             }
         }
-        return Integer.MAX_VALUE - 1;
+        return Integer.MAX_VALUE;
     }
 
     private boolean isTaken(Position pos) {
@@ -187,7 +186,7 @@ public class Day15 {
             }
             if (!isAttacking()) {
                 // move
-                move();
+                move2();
             }
             // attack
             return attack();
@@ -199,11 +198,55 @@ public class Day15 {
 
         public boolean isAttacking() {
             for (Position neigh : generateNeighbours(this.position)) {
-                if (units.containsKey(neigh) && units.get(neigh).type != this.type) {
+                if (units.containsKey(neigh) && units.get(neigh).type != this.type && units.get(neigh).isAlive()) {
                     return true;
                 }
             }
             return false;
+        }
+
+        private void move2() {
+            int minPathLen = Integer.MAX_VALUE;
+            List<Position> inSameDistance = new ArrayList<>();
+            List<Unit> enemies = units.values().stream().filter(u -> u.type != this.type && u.isAlive()).collect(Collectors.toList());
+            List<Position> enemiesNeighbours = new ArrayList<>();
+            for (Unit enemy : enemies) {
+                List<Position> neighs = generateNeighbours(enemy.position);
+                for (Position neigh : neighs) {
+                    if (isValidPosition(neigh) && !isTaken(neigh)) {
+                        enemiesNeighbours.add(neigh);
+                    }
+                }
+            }
+            for (Position targetPos : enemiesNeighbours) {
+                int curMinLen = dijkstra(this.position, targetPos);
+                if (curMinLen != Integer.MAX_VALUE && curMinLen < minPathLen) {
+                    minPathLen = curMinLen;
+                    inSameDistance.clear();
+                    inSameDistance.add(targetPos);
+                } else if (curMinLen != Integer.MAX_VALUE && curMinLen == minPathLen) {
+                    inSameDistance.add(targetPos);
+                }
+            }
+            if (inSameDistance.isEmpty()) {
+                return;
+            }
+            inSameDistance.sort(Comparator.naturalOrder());
+            Position thePos = inSameDistance.get(0);
+            List<Position> nextMoves = generateNeighbours(this.position);
+            for (Position move : nextMoves) {
+                if (!isValidPosition(move)) {
+                    continue;
+                }
+                if (isTaken(move)) {
+                    continue;
+                }
+                if (dijkstra(move, thePos) == minPathLen - 1) {
+                    this.position = move;
+                    return;
+                }
+            }
+            return;
         }
 
         private void move() {
@@ -213,12 +256,13 @@ public class Day15 {
             int minLen[][] = new int[map.length][map[0].length];
             for (int x = 0; x < map.length; ++x) {
                 for (int y = 0; y < map[0].length; ++y) {
-                    minLen[x][y] = Integer.MAX_VALUE - 1;
+                    minLen[x][y] = Integer.MAX_VALUE;
                 }
             }
             minLen[position.x][position.y] = 0;
             int globalMinLen = Integer.MAX_VALUE;
             List<Position> targets = new ArrayList<>();
+            boolean allInDistanceFound = false;
             while (!queue.isEmpty()) {
                 Position cur = queue.poll();
                 visited.add(cur);
@@ -244,6 +288,7 @@ public class Day15 {
                             }
                             if (newMinLen > globalMinLen) {
                                 // distances are already bigger than global minimal distance
+                                allInDistanceFound = true;
                                 break;
                             }
                             targets.add(neigh);
@@ -251,7 +296,13 @@ public class Day15 {
                     }
                 }
 
-                if (globalMinLen != Integer.MAX_VALUE) {
+                for (Position neigh : neighs) {
+                    if (!queue.contains(neigh) && !visited.contains(neigh) && isValidPosition(neigh) && !isTaken(neigh)) {
+                        queue.add(neigh);
+                    }
+                }
+
+                if (globalMinLen != Integer.MAX_VALUE && (allInDistanceFound || queue.isEmpty())) {
                     targets.sort(Position::compareTo);
                     Position target = targets.get(0);
                     List<Position> nextMoves = generateNeighbours(this.position);
@@ -268,12 +319,6 @@ public class Day15 {
                         }
                     }
                 }
-
-                for (Position neigh : neighs) {
-                    if (!queue.contains(neigh) && !visited.contains(neigh) && isValidPosition(neigh) && !isTaken(neigh)) {
-                        queue.add(neigh);
-                    }
-                }
             }
         }
 
@@ -285,7 +330,7 @@ public class Day15 {
                     Unit other = units.get(neigh);
                     if (other.type != this.type && other.isAlive() && other.hitPoints < minHitPoints) {
                         unitToAttack = other;
-                        minHitPoints = unitToAttack.hitPoints;
+                        minHitPoints = other.hitPoints;
                     }
                 }
             }

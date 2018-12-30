@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 
 public class Day23Test {
@@ -25,7 +26,7 @@ public class Day23Test {
     @Test
     public void task1Test1() throws IOException {
         Day23 day23 = new Day23();
-        InputStream inputStream = getClass().getResourceAsStream("/testday23.txt");
+        InputStream inputStream = getClass().getResourceAsStream("/test1day23.txt");
         List<Day23.Nanobot> nanobots = FileUtils.readElementsLineByLine(inputStream, day23::parseNanobot);
 
         Assert.assertEquals(7, new Day23().task1(nanobots));
@@ -38,5 +39,24 @@ public class Day23Test {
         List<Day23.Nanobot> nanobots = FileUtils.readElementsLineByLine(inputStream, day23::parseNanobot);
 
         Assert.assertEquals(595, new Day23().task1(nanobots));
+    }
+
+    @Test
+    public void task2Test1() throws IOException {
+        Day23 day23 = new Day23();
+        InputStream inputStream = getClass().getResourceAsStream("/test2day23.txt");
+        List<Day23.Nanobot> nanobots = FileUtils.readElementsLineByLine(inputStream, day23::parseNanobot);
+
+        Assert.assertEquals(36, new Day23().task2(nanobots));
+        //Assert.assertEquals(36, new Day23().task2Prim(nanobots));
+    }
+
+    @Test
+    public void task2() throws IOException {
+        Day23 day23 = new Day23();
+        InputStream inputStream = getClass().getResourceAsStream("/day23.txt");
+        List<Day23.Nanobot> nanobots = FileUtils.readElementsLineByLine(inputStream, day23::parseNanobot);
+
+        Assert.assertEquals(0, new Day23().task2(nanobots));
     }
 }

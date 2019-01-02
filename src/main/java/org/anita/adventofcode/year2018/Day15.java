@@ -99,49 +99,6 @@ public class Day15 {
         System.out.println("-----");
     }
 
-    private int dijkstra(Position from, Position to) {
-        if (from.equals(to)) {
-            return 0;
-        }
-        LinkedList<Position> queue = new LinkedList<>();
-        Set<Position> visited = new HashSet<>();
-        queue.add(from);
-        int minLen[][] = new int[map.length][map[0].length];
-        for (int x = 0; x < map.length; ++x) {
-            for (int y = 0; y < map[0].length; ++y) {
-                minLen[x][y] = Integer.MAX_VALUE;
-            }
-        }
-        minLen[from.x][from.y] = 0;
-        while (!queue.isEmpty()) {
-            Position cur = queue.poll();
-            List<Position> neighs = generateNeighbours(cur);
-            visited.add(cur);
-            for (Position neigh : neighs) {
-                if (!isValidPosition(neigh)) {
-                    continue;
-                }
-                if (isTaken(neigh) && !neigh.equals(to)) {
-                    continue;
-                }
-                int newMinLen = minLen[cur.x][cur.y] + 1;
-                if (newMinLen < minLen[neigh.x][neigh.y]) {
-                    minLen[neigh.x][neigh.y] = newMinLen;
-                    if (to.equals(neigh)) {
-                        return newMinLen;
-                    }
-                }
-            }
-
-            for (Position neigh : neighs) {
-                if (!queue.contains(neigh) && !visited.contains(neigh) && isValidPosition(neigh) && !isTaken(neigh)) {
-                    queue.add(neigh);
-                }
-            }
-        }
-        return Integer.MAX_VALUE;
-    }
-
     private boolean isTaken(Position pos) {
         if (units.containsKey(pos) && units.get(pos).isAlive()) {
             return true;
@@ -212,19 +169,18 @@ public class Day15 {
             Set<Position> visited = new HashSet<>();
             queue.add(position);
             int minLen[][] = new int[map.length][map[0].length];
-            for (int x = 0; x < map.length; ++x) {
+            Position prev[][] = new Position[map.length][map[0].length];
+            for (int x = 0; x < map.length; ++ x) {
                 for (int y = 0; y < map[0].length; ++y) {
                     minLen[x][y] = Integer.MAX_VALUE;
                 }
             }
             minLen[position.x][position.y] = 0;
-            int globalMinLen = Integer.MAX_VALUE;
-            List<Position> targets = new ArrayList<>();
-            boolean allInDistanceFound = false;
             while (!queue.isEmpty()) {
                 Position cur = queue.poll();
-                visited.add(cur);
                 List<Position> neighs = generateNeighbours(cur);
+                visited.add(cur);
+
                 for (Position neigh : neighs) {
                     if (!isValidPosition(neigh)) {
                         continue;
@@ -236,20 +192,18 @@ public class Day15 {
                             continue;
                         }
                     }
+
                     int newMinLen = minLen[cur.x][cur.y] + 1;
                     if (newMinLen < minLen[neigh.x][neigh.y]) {
                         minLen[neigh.x][neigh.y] = newMinLen;
+                        prev[neigh.x][neigh.y] = cur;
                         if (units.containsKey(neigh) && units.get(neigh).type != this.type && units.get(neigh).isAlive()) {
-                            // we have found a target
-                            if (newMinLen < globalMinLen) {
-                                globalMinLen = newMinLen;
+                            Position prevInPath = cur;
+                            while (prevInPath.manhattanDistance(this.position) > 1){
+                                prevInPath = prev[prevInPath.x][prevInPath.y];
                             }
-                            if (newMinLen > globalMinLen) {
-                                // distances are already bigger than global minimal distance
-                                allInDistanceFound = true;
-                                break;
-                            }
-                            targets.add(neigh);
+                            this.position = new Position(prevInPath.x, prevInPath.y);
+                            return;
                         }
                     }
                 }
@@ -257,24 +211,6 @@ public class Day15 {
                 for (Position neigh : neighs) {
                     if (!queue.contains(neigh) && !visited.contains(neigh) && isValidPosition(neigh) && !isTaken(neigh)) {
                         queue.add(neigh);
-                    }
-                }
-
-                if (globalMinLen != Integer.MAX_VALUE && (allInDistanceFound || queue.isEmpty())) {
-                    targets.sort(Position::compareTo);
-                    Position target = targets.get(0);
-                    List<Position> nextMoves = generateNeighbours(this.position);
-                    for (Position move : nextMoves) {
-                        if (!isValidPosition(move)) {
-                            continue;
-                        }
-                        if (isTaken(move)) {
-                            continue;
-                        }
-                        if (dijkstra(move, target) == globalMinLen - 1) {
-                            this.position = move;
-                            return;
-                        }
                     }
                 }
             }

@@ -131,7 +131,7 @@ public class Day19 {
     }
 
     public String banip(int[] registers, int[] op) {
-        return "R[" + op[0] + "] & " + op[1];
+        return "R[" + op[0] + "] & " + Integer.toBinaryString(op[1]);
     }
 
     public String borrp(int[] registers, int[] op) {
@@ -139,7 +139,7 @@ public class Day19 {
     }
 
     public String borip(int[] registers, int[] op) {
-        return "R[" + op[0] + "] | " + op[1];
+        return "R[" + op[0] + "] | " + Integer.toBinaryString(op[1]);
     }
 
     public String setrp(int[] registers, int[] op) {
@@ -174,9 +174,10 @@ public class Day19 {
         return "R[" + op[0] + "] == R[" + op[1] + "]";
     }
 
-    public int[] execute(int[] register, int instructionPointerIndex, List<Instruction> instructions) {
+    public int[] execute(int[] register, int instructionPointerIndex, List<Instruction> instructions, int maxLoop) {
         int instructionPointer = register[instructionPointerIndex];
-        while (true) {
+        int loop = 0;
+        while (loop <= maxLoop) {
             if (instructionPointer < 0 || instructionPointer >= instructions.size()) {
                 return register;
             }
@@ -189,13 +190,15 @@ public class Day19 {
             //System.out.println(" " + Arrays.toString(register));
             instructionPointer = register[instructionPointerIndex];
             instructionPointer += 1;
+            loop += 1;
         }
+        return register;
     }
 
     public int[] executeAndPrint(int[] register, int instructionPointerIndex, List<Instruction> instructions, int maxLoop) {
         int instructionPointer = register[instructionPointerIndex];
         int loop = 0;
-        while (true) {
+        while (loop <= maxLoop) {
             if (instructionPointer < 0 || instructionPointer >= instructions.size()) {
                 System.out.println("THE END");
                 return register;
@@ -209,26 +212,19 @@ public class Day19 {
             //System.out.print(" " + currentInstruction);
             Integer result = operations.get(currentInstruction.opCode).apply(register, currentInstruction.args);
             printResult += "\t\t// " + Arrays.toString(register);
-            System.out.println(printResult);
+            System.out.println(printResult.replaceAll("R\\[" + instructionPointerIndex + "\\]", "IP"));
             register[currentInstruction.args[2]] = result;
             //System.out.println("After R: " + Arrays.toString(register));
             //System.out.println(" " + Arrays.toString(register));
             instructionPointer = register[instructionPointerIndex];
             instructionPointer += 1;
             loop += 1;
-            if (loop > maxLoop) {
-                return register;
-            }
         }
+        return register;
     }
 
     public String print(int instructionPointerIndex, List<Instruction> instructions) {
         String result = "";
-        Map<Integer, String> registerNames = new HashMap<>();
-        for (int i = 0; i < 6; ++i) {
-            registerNames.put(i, "" + (char) ('A' + i));
-        }
-        registerNames.put(instructionPointerIndex, "I");
         //result += "IP " + instructionPointerIndex + "\n";
         int instructionIndex = 0;
         for (Instruction instruction : instructions) {

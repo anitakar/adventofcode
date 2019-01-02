@@ -18,7 +18,7 @@ public class Day19Test {
         List<String> input = FileUtils.readStringsLineByLine(inputStream);
         List<Day19.Instruction> program = Day19.readProgram(input.subList(1, input.size()));
 
-        Assert.assertEquals(6, new Day19().execute(new int[] {0,0,0,0,0,0}, 0, program)[0]);
+        Assert.assertEquals(6, new Day19().execute(new int[] {0,0,0,0,0,0}, 0, program, 1000000000)[0]);
     }
 
     @Test
@@ -27,7 +27,7 @@ public class Day19Test {
         List<String> input = FileUtils.readStringsLineByLine(inputStream);
         List<Day19.Instruction> program = Day19.readProgram(input.subList(1, input.size()));
 
-        int[] registers = new Day19().execute(new int[]{0, 0, 0, 0, 0, 0}, 1, program);
+        int[] registers = new Day19().execute(new int[]{0, 0, 0, 0, 0, 0}, 1, program, 1000000000);
         System.out.println(Arrays.toString(registers));
         Assert.assertEquals(1440, registers[0]);
     }
@@ -39,7 +39,7 @@ public class Day19Test {
         List<String> input = FileUtils.readStringsLineByLine(inputStream);
         List<Day19.Instruction> program = Day19.readProgram(input.subList(1, input.size()));
 
-        Assert.assertEquals(1440, new Day19().execute(new int[] {1,0,0,0,0,0}, 1, program)[0]);
+        Assert.assertEquals(1440, new Day19().execute(new int[] {1,0,0,0,0,0}, 1, program, 1000000000)[0]);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class Day19Test {
         List<String> input = FileUtils.readStringsLineByLine(inputStream);
         List<Day19.Instruction> program = Day19.readProgram(input.subList(1, input.size()));
 
-        int[] registers = new Day19().execute(new int[]{1, 3, 0, 479, 958, 2}, 1, program);
+        int[] registers = new Day19().execute(new int[]{1, 3, 0, 479, 958, 2}, 1, program, 1000000000);
         System.out.println(Arrays.toString(registers));
         Assert.assertEquals(1440, registers[0]);
     }

@@ -3,7 +3,6 @@ package org.anita.adventofcode.year2018;
 import org.anita.adventofcode.structures.Position;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Day15 {
 
@@ -11,11 +10,16 @@ public class Day15 {
     char[][] map;
 
     public Day15(List<String> lines) {
-        parseMap(lines);
-        printMap();
+        parseMap(lines, 3);
+        //printMap();
     }
 
-    private void parseMap(List<String> lines) {
+    public Day15(List<String> lines, int elfAttackPower) {
+        parseMap(lines, elfAttackPower);
+        //printMap();
+    }
+
+    private void parseMap(List<String> lines, int elfAttackPower) {
         int maxy = lines.size();
         int maxx = 0;
         for (String line : lines) {
@@ -26,7 +30,7 @@ public class Day15 {
         for (String line : lines) {
             for (int x = 0; x < line.length(); ++x) {
                 if (line.charAt(x) == 'E' || line.charAt(x) == 'G') {
-                    units.put(new Position(x, y), new Unit(3, 200, line.charAt(x), new Position(x, y)));
+                    units.put(new Position(x, y), new Unit('E' == line.charAt(x) ? elfAttackPower : 3, 200, line.charAt(x), new Position(x, y)));
                     map[x][y] = '.';
                 } else {
                     map[x][y] = line.charAt(x);
@@ -36,7 +40,11 @@ public class Day15 {
         }
     }
 
-    public long task1() {
+    public TreeMap<Position, Unit> getUnits() {
+        return units;
+    }
+
+    public long battle() {
         int round = 1;
         while (true) {
             ArrayList<Unit> currentUnits = new ArrayList<>(this.units.values());
@@ -57,8 +65,8 @@ public class Day15 {
                 units.put(new Position(unit.position.x, unit.position.y), unit);
                 long elfCount = units.values().stream().filter(u -> u.type == 'E').count();
                 if (elfCount == units.size() || elfCount == 0) {
-                    System.out.println(round);
-                    printMap();
+                    //System.out.println(round);
+                    //printMap();
                     //printUnits();
                     if (i == currentUnits.size() - 1) {
                         return round * totalPoints();
@@ -68,8 +76,8 @@ public class Day15 {
                 }
             }
 
-            System.out.println(round);
-            printMap();
+            //System.out.println(round);
+            //printMap();
             //printUnits();
             round += 1;
         }

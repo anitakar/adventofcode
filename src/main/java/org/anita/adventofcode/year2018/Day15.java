@@ -43,7 +43,9 @@ public class Day15 {
             for (int i = 0; i < currentUnits.size(); ++i) {
                 Unit unit = currentUnits.get(i);
                 if (!unit.isAlive()) {
-                    units.remove(unit.position);
+                    if (units.get(unit.position) == unit) {
+                        units.remove(unit.position);
+                    }
                     continue;
                 }
                 Position curPosition = new Position(unit.position.x, unit.position.y);
@@ -57,7 +59,7 @@ public class Day15 {
                 if (elfCount == units.size() || elfCount == 0) {
                     System.out.println(round);
                     printMap();
-                    printUnits();
+                    //printUnits();
                     if (i == currentUnits.size() - 1) {
                         return round * totalPoints();
                     } else {
@@ -68,7 +70,7 @@ public class Day15 {
 
             System.out.println(round);
             printMap();
-            printUnits();
+            //printUnits();
             round += 1;
         }
     }
@@ -167,9 +169,9 @@ public class Day15 {
     }
 
     public class Unit {
-        int attackPower;
+        final int attackPower;
         int hitPoints;
-        char type;
+        final char type;
         Position position;
 
         public Unit(int attackPower, int hitPoints, char type, Position position) {
@@ -186,7 +188,7 @@ public class Day15 {
             }
             if (!isAttacking()) {
                 // move
-                move2();
+                move();
             }
             // attack
             return attack();
@@ -203,50 +205,6 @@ public class Day15 {
                 }
             }
             return false;
-        }
-
-        private void move2() {
-            int minPathLen = Integer.MAX_VALUE;
-            List<Position> inSameDistance = new ArrayList<>();
-            List<Unit> enemies = units.values().stream().filter(u -> u.type != this.type && u.isAlive()).collect(Collectors.toList());
-            List<Position> enemiesNeighbours = new ArrayList<>();
-            for (Unit enemy : enemies) {
-                List<Position> neighs = generateNeighbours(enemy.position);
-                for (Position neigh : neighs) {
-                    if (isValidPosition(neigh) && !isTaken(neigh)) {
-                        enemiesNeighbours.add(neigh);
-                    }
-                }
-            }
-            for (Position targetPos : enemiesNeighbours) {
-                int curMinLen = dijkstra(this.position, targetPos);
-                if (curMinLen != Integer.MAX_VALUE && curMinLen < minPathLen) {
-                    minPathLen = curMinLen;
-                    inSameDistance.clear();
-                    inSameDistance.add(targetPos);
-                } else if (curMinLen != Integer.MAX_VALUE && curMinLen == minPathLen) {
-                    inSameDistance.add(targetPos);
-                }
-            }
-            if (inSameDistance.isEmpty()) {
-                return;
-            }
-            inSameDistance.sort(Comparator.naturalOrder());
-            Position thePos = inSameDistance.get(0);
-            List<Position> nextMoves = generateNeighbours(this.position);
-            for (Position move : nextMoves) {
-                if (!isValidPosition(move)) {
-                    continue;
-                }
-                if (isTaken(move)) {
-                    continue;
-                }
-                if (dijkstra(move, thePos) == minPathLen - 1) {
-                    this.position = move;
-                    return;
-                }
-            }
-            return;
         }
 
         private void move() {

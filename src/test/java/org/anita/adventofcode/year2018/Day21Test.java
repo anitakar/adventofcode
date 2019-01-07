@@ -63,11 +63,11 @@ public class Day21Test {
         List<Day19.Instruction> program = Day19.readProgram(input.subList(1, input.size()));
 
         int[] register = new Day19().execute(new int[]{0, 0, 0, 0, 0, 0}, 2, program, 20);
-        for (int i = 0; i < 500000; ++i) {
+        for (int i = 0; i < 330000; ++i) {
             register[1] = register[3] / 256;
             register[0] = 0; register[2] = 8; register[3] = register[1];  register[5] = 1;
-            register = new Day19().execute(register, 2, program, 9);
-            System.out.println(register[4]);
+            register = new Day19().executeAndPrint(register, 2, program, 9);
+            System.out.println("" + register[0] + ", " +  register[4]);
             //System.out.println("R[4]:\t\t" + register[4] + ", binary:\t\t" + Integer.toBinaryString(register[4]));
         }
     }

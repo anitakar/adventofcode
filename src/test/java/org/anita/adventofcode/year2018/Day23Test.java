@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.List;
 
 public class Day23Test {
@@ -48,7 +47,6 @@ public class Day23Test {
         List<Day23.Nanobot> nanobots = FileUtils.readElementsLineByLine(inputStream, day23::parseNanobot);
 
         Assert.assertEquals(36, new Day23().task2(nanobots));
-        //Assert.assertEquals(36, new Day23().task2Prim(nanobots));
     }
 
     @Test

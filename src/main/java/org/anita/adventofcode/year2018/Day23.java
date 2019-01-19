@@ -3,7 +3,6 @@ package org.anita.adventofcode.year2018;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class Day23 {
 
@@ -81,7 +80,42 @@ public class Day23 {
                 clique.add(neigh);
             }
         }
-        return findMinManhattanDistanceFromZeroToIntersection(clique);
+        return findIntersectionPointClosestToZero(clique);
+    }
+
+    private int findIntersectionPointClosestToZero(List<Nanobot> clique) {
+        int minx = clique.stream().mapToInt(n -> n.x - n.range).max().getAsInt();
+        int maxx = clique.stream().mapToInt(n -> n.x + n.range).min().getAsInt();
+
+        int miny = clique.stream().mapToInt(n -> n.y - n.range).max().getAsInt();
+        int maxy = clique.stream().mapToInt(n -> n.y + n.range).min().getAsInt();
+
+        int minz = clique.stream().mapToInt(n -> n.z - n.range).max().getAsInt();
+        int maxz = clique.stream().mapToInt(n -> n.z + n.range).min().getAsInt();
+
+        int xDistance = 0;
+        if (minx < 0 && maxx < 0) {
+            xDistance = -maxx;
+        }
+        if (minx > 0 && maxx > 0) {
+            xDistance = minx;
+        }
+        int yDistance = 0;
+        if (miny < 0 && maxy < 0) {
+            yDistance = -maxy;
+        }
+        if (miny > 0 && maxy > 0) {
+            yDistance = miny;
+        }
+        int zDistance = 0;
+        if (minz < 0 && maxz < 0) {
+            zDistance = -maxz;
+        }
+        if (minz > 0 && maxz > 0) {
+            zDistance = minz;
+        }
+
+        return xDistance + yDistance + zDistance;
     }
 
     private long findMinManhattanDistanceFromZeroToIntersection(List<Nanobot> clique) {
@@ -114,12 +148,6 @@ public class Day23 {
         }
 
         return (long) (Math.abs(middleX) + Math.abs(middleY) + Math.abs(middleZ));
-    }
-
-    public long task2Prim(List<Nanobot> nanobots) {
-        Nanobot max = nanobots.stream().max(Comparator.comparingInt(n -> n.range)).get();
-        List<Nanobot> inBiggestClique = nanobots.stream().filter(n -> intersect(max, n)).collect(Collectors.toList());
-        return findMinManhattanDistanceFromZeroToIntersection(inBiggestClique);
     }
 
     private boolean inSubset(Set<Nanobot> current, Set<Set<Nanobot>> computed) {

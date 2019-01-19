@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 
 public class Day21Test {
@@ -44,12 +45,11 @@ public class Day21Test {
 //        System.out.println("====================================================================");
           int[] register = new Day19().executeAndPrint(new int[]{0, 0, 0, 0, 0, 0}, 2, program, 20);
 
-            for (int i = 0; i < 90; ++i) {
+            for (int i = 0; i < 2; ++i) {
                 System.out.println("============================" + i + "==================================");
                 //256*R[1] > R[3]
                 //==> [0, R[1], 8, R[1], R[4], 1]
-                register[1] = register[3] / 256;
-                register[0] = 0; register[2] = 8; register[3] = register[1];  register[5] = 1;
+                reassignRegisters1(register);
                 register = new Day19().executeAndPrint(register, 2, program, 20);
             }
 //        new Day19().executeAndPrint(new int[]{0, register[4] / 256, 18, register[3], register[4], 0}, 2, program, 1000);
@@ -63,13 +63,37 @@ public class Day21Test {
         List<Day19.Instruction> program = Day19.readProgram(input.subList(1, input.size()));
 
         int[] register = new Day19().execute(new int[]{0, 0, 0, 0, 0, 0}, 2, program, 20);
-        for (int i = 0; i < 330000; ++i) {
-            register[1] = register[3] / 256;
-            register[0] = 0; register[2] = 8; register[3] = register[1];  register[5] = 1;
-            register = new Day19().executeAndPrint(register, 2, program, 9);
-            System.out.println("" + register[0] + ", " +  register[4]);
+        //System.out.println(Arrays.toString(register));
+        reassignRegisters1(register);
+        register = new Day19().execute(register, 2, program, 20);
+        //System.out.println(Arrays.toString(register));
+        reassignRegisters1(register);
+        register = new Day19().execute(register, 2, program, 30);
+        //System.out.println(Arrays.toString(register));
+        for (int i = 0; i < 300000; ++i) {
+            //System.out.println("============================" + i + "==================================");
+            reassignRegisters2(register);
+            register = new Day19().execute(register, 2, program, 30);
+            //System.out.println(Arrays.toString(register));
+            System.out.println(register[3]);
             //System.out.println("R[4]:\t\t" + register[4] + ", binary:\t\t" + Integer.toBinaryString(register[4]));
         }
+    }
+
+    private void reassignRegisters1(int[] register) {
+        register[1] = register[3] / 256;
+        register[0] = 0;
+        register[2] = 8;
+        register[3] = register[1];
+        register[5] = 1;
+    }
+
+    private void reassignRegisters2(int[] register) {
+        register[1] = register[3] / 256;
+        register[0] = 0;
+        register[2] = 6;
+        register[3] = register[1];
+        register[5] = 1;
     }
 
 }

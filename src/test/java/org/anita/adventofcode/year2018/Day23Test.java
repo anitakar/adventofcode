@@ -2,6 +2,7 @@ package org.anita.adventofcode.year2018;
 
 import org.anita.adventofcode.util.FileUtils;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -41,6 +42,7 @@ public class Day23Test {
     }
 
     @Test
+    @Ignore
     public void task2Test1() throws IOException {
         Day23 day23 = new Day23();
         InputStream inputStream = getClass().getResourceAsStream("/test2day23.txt");
@@ -50,6 +52,7 @@ public class Day23Test {
     }
 
     @Test
+    @Ignore
     public void task2() throws IOException {
         Day23 day23 = new Day23();
         InputStream inputStream = getClass().getResourceAsStream("/day23.txt");

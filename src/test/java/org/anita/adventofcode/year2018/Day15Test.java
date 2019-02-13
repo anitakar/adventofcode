@@ -108,6 +108,6 @@ public class Day15Test {
             }
         }
 
-        Assert.assertEquals(263327, outcome);
+        Assert.assertEquals(77872, outcome);
     }
 }

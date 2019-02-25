@@ -1,12 +1,12 @@
 package org.anita.adventofcode.year2018;
 
-import org.anita.adventofcode.structures.Position;
+import org.anita.adventofcode.structures.Position2D;
 
 import java.util.*;
 
 public class Day15 {
 
-    TreeMap<Position, Unit> units = new TreeMap<>();
+    TreeMap<Position2D, Unit> units = new TreeMap<>();
     char[][] map;
 
     public Day15(List<String> lines) {
@@ -30,7 +30,7 @@ public class Day15 {
         for (String line : lines) {
             for (int x = 0; x < line.length(); ++x) {
                 if (line.charAt(x) == 'E' || line.charAt(x) == 'G') {
-                    units.put(new Position(x, y), new Unit('E' == line.charAt(x) ? elfAttackPower : 3, 200, line.charAt(x), new Position(x, y)));
+                    units.put(new Position2D(x, y), new Unit('E' == line.charAt(x) ? elfAttackPower : 3, 200, line.charAt(x), new Position2D(x, y)));
                     map[x][y] = '.';
                 } else {
                     map[x][y] = line.charAt(x);
@@ -40,7 +40,7 @@ public class Day15 {
         }
     }
 
-    public TreeMap<Position, Unit> getUnits() {
+    public TreeMap<Position2D, Unit> getUnits() {
         return units;
     }
 
@@ -56,13 +56,13 @@ public class Day15 {
                     }
                     continue;
                 }
-                Position curPosition = new Position(unit.position.x, unit.position.y);
+                Position2D curPosition = new Position2D(unit.position.x, unit.position.y);
                 Unit killed = unit.round();
                 if (killed != null) {
                     units.remove(killed.position);
                 }
                 units.remove(curPosition);
-                units.put(new Position(unit.position.x, unit.position.y), unit);
+                units.put(new Position2D(unit.position.x, unit.position.y), unit);
                 long elfCount = units.values().stream().filter(u -> u.type == 'E').count();
                 if (elfCount == units.size() || elfCount == 0) {
                     //System.out.println(round);
@@ -90,8 +90,8 @@ public class Day15 {
     public void printMap() {
         for (int y = 0; y < map[0].length; ++y) {
             for (int x = 0; x < map.length; ++x) {
-                if (units.containsKey(new Position(x, y))) {
-                    System.out.print(units.get(new Position(x, y)).type);
+                if (units.containsKey(new Position2D(x, y))) {
+                    System.out.print(units.get(new Position2D(x, y)).type);
                 } else {
                     System.out.print(map[x][y]);
                 }
@@ -107,14 +107,14 @@ public class Day15 {
         System.out.println("-----");
     }
 
-    private boolean isTaken(Position pos) {
+    private boolean isTaken(Position2D pos) {
         if (units.containsKey(pos) && units.get(pos).isAlive()) {
             return true;
         }
         return false;
     }
 
-    private List<Position> generateNeighbours(Position cur) {
+    private List<Position2D> generateNeighbours(Position2D cur) {
         return Arrays.asList(
                 cur.up(),
                 cur.left(),
@@ -123,7 +123,7 @@ public class Day15 {
         );
     }
 
-    private boolean isValidPosition(Position pos) {
+    private boolean isValidPosition(Position2D pos) {
         if (pos.x < 0 || pos.x >= map.length || pos.y < 0 || pos.y >= map[0].length) {
             return false;
         }
@@ -137,9 +137,9 @@ public class Day15 {
         final int attackPower;
         int hitPoints;
         final char type;
-        Position position;
+        Position2D position;
 
-        public Unit(int attackPower, int hitPoints, char type, Position position) {
+        public Unit(int attackPower, int hitPoints, char type, Position2D position) {
             this.attackPower = attackPower;
             this.hitPoints = hitPoints;
             this.type = type;
@@ -164,7 +164,7 @@ public class Day15 {
         }
 
         public boolean isAttacking() {
-            for (Position neigh : generateNeighbours(this.position)) {
+            for (Position2D neigh : generateNeighbours(this.position)) {
                 if (units.containsKey(neigh) && units.get(neigh).type != this.type && units.get(neigh).isAlive()) {
                     return true;
                 }
@@ -173,11 +173,11 @@ public class Day15 {
         }
 
         private void move() {
-            LinkedList<Position> queue = new LinkedList<>();
-            Set<Position> visited = new HashSet<>();
+            LinkedList<Position2D> queue = new LinkedList<>();
+            Set<Position2D> visited = new HashSet<>();
             queue.add(position);
             int minLen[][] = new int[map.length][map[0].length];
-            Position prev[][] = new Position[map.length][map[0].length];
+            Position2D prev[][] = new Position2D[map.length][map[0].length];
             for (int x = 0; x < map.length; ++ x) {
                 for (int y = 0; y < map[0].length; ++y) {
                     minLen[x][y] = Integer.MAX_VALUE;
@@ -185,11 +185,11 @@ public class Day15 {
             }
             minLen[position.x][position.y] = 0;
             while (!queue.isEmpty()) {
-                Position cur = queue.poll();
-                List<Position> neighs = generateNeighbours(cur);
+                Position2D cur = queue.poll();
+                List<Position2D> neighs = generateNeighbours(cur);
                 visited.add(cur);
 
-                for (Position neigh : neighs) {
+                for (Position2D neigh : neighs) {
                     if (!isValidPosition(neigh)) {
                         continue;
                     }
@@ -206,17 +206,17 @@ public class Day15 {
                         minLen[neigh.x][neigh.y] = newMinLen;
                         prev[neigh.x][neigh.y] = cur;
                         if (units.containsKey(neigh) && units.get(neigh).type != this.type && units.get(neigh).isAlive()) {
-                            Position prevInPath = cur;
+                            Position2D prevInPath = cur;
                             while (prevInPath.manhattanDistance(this.position) > 1){
                                 prevInPath = prev[prevInPath.x][prevInPath.y];
                             }
-                            this.position = new Position(prevInPath.x, prevInPath.y);
+                            this.position = new Position2D(prevInPath.x, prevInPath.y);
                             return;
                         }
                     }
                 }
 
-                for (Position neigh : neighs) {
+                for (Position2D neigh : neighs) {
                     if (!queue.contains(neigh) && !visited.contains(neigh) && isValidPosition(neigh) && !isTaken(neigh)) {
                         queue.add(neigh);
                     }
@@ -227,7 +227,7 @@ public class Day15 {
         private Unit attack() {
             int minHitPoints = Integer.MAX_VALUE;
             Unit unitToAttack = null;
-            for (Position neigh : generateNeighbours(this.position)) {
+            for (Position2D neigh : generateNeighbours(this.position)) {
                 if (units.containsKey(neigh)) {
                     Unit other = units.get(neigh);
                     if (other.type != this.type && other.isAlive() && other.hitPoints < minHitPoints) {

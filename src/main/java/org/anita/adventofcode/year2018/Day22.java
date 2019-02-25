@@ -1,6 +1,6 @@
 package org.anita.adventofcode.year2018;
 
-import org.anita.adventofcode.structures.Position;
+import org.anita.adventofcode.structures.Position2D;
 
 public class Day22 {
 
@@ -58,16 +58,16 @@ public class Day22 {
     public int task2(int x, int y, int depth) {
         calculateMap(7 * x, 7 * y, depth);
 
-        Position currentPosition = new Position(0, 0);
+        Position2D currentPosition = new Position2D(0, 0);
         int currentGear = TORCH;
-        Position targetPosition = new Position(x, y);
+        Position2D targetPosition = new Position2D(x, y);
         int targetGear = TORCH;
 
 
         return 0;
     }
 
-    public int cost(Position target, int currentEquipment) {
+    public int cost(Position2D target, int currentEquipment) {
         long targetRegionType = map[target.x][target.y];
         if (targetRegionType == ROCKY) {
             if (currentEquipment == CLIMBING_GEAR || currentEquipment == TORCH) {

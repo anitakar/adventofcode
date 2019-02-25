@@ -1,6 +1,6 @@
 package org.anita.adventofcode.year2018;
 
-import org.anita.adventofcode.structures.Position;
+import org.anita.adventofcode.structures.Position2D;
 
 import java.util.*;
 
@@ -15,9 +15,9 @@ public class Day20 {
     }
 
     public void readMap(String regex) {
-        findBox(new Position(0, 0), regex);
+        findBox(new Position2D(0, 0), regex);
         prepareEmptyMap();
-        Position position = new Position(0, 0);
+        Position2D position = new Position2D(0, 0);
         fillMap(position, regex);
         printMap();
     }
@@ -31,20 +31,20 @@ public class Day20 {
         }
         shortestPaths[0 - minx][0 - miny] = 0;
 
-        LinkedList<Position> queue = new LinkedList<>();
-        queue.add(new Position(0 - minx, 0 - miny));
-        Set<Position> visited = new HashSet<>();
+        LinkedList<Position2D> queue = new LinkedList<>();
+        queue.add(new Position2D(0 - minx, 0 - miny));
+        Set<Position2D> visited = new HashSet<>();
         while (!queue.isEmpty()) {
             //printShortestPaths();
-            Position current = queue.pop();
+            Position2D current = queue.pop();
             visited.add(current);
             int currentMinLen = shortestPaths[current.x][current.y];
 
             // down
             if (current.y + 2 < map[0].length) {
-                Position door = current.down();
+                Position2D door = current.down();
                 if (map[door.x][door.y] != '#') {
-                    Position next = door.down();
+                    Position2D next = door.down();
                     if (currentMinLen + 1 < shortestPaths[next.x][next.y]) {
                         shortestPaths[next.x][next.y] = currentMinLen + 1;
                     }
@@ -56,9 +56,9 @@ public class Day20 {
 
             // up
             if (current.y - 2 > 0) {
-                Position door = current.up();
+                Position2D door = current.up();
                 if (map[door.x][door.y] != '#') {
-                    Position next = door.up();
+                    Position2D next = door.up();
                     if (currentMinLen + 1 < shortestPaths[next.x][next.y]) {
                         shortestPaths[next.x][next.y] = currentMinLen + 1;
                     }
@@ -70,9 +70,9 @@ public class Day20 {
 
             // right
             if (current.x + 2 < map.length) {
-                Position door = current.right();
+                Position2D door = current.right();
                 if (map[door.x][door.y] != '#') {
-                    Position next = door.right();
+                    Position2D next = door.right();
                     if (currentMinLen + 1 < shortestPaths[next.x][next.y]) {
                         shortestPaths[next.x][next.y] = currentMinLen + 1;
                     }
@@ -84,9 +84,9 @@ public class Day20 {
 
             // left
             if (current.x - 2 > 0) {
-                Position door = current.left();
+                Position2D door = current.left();
                 if (map[door.x][door.y] != '#') {
-                    Position next = door.left();
+                    Position2D next = door.left();
                     if (currentMinLen + 1 < shortestPaths[next.x][next.y]) {
                         shortestPaths[next.x][next.y] = currentMinLen + 1;
                     }
@@ -123,7 +123,7 @@ public class Day20 {
         return total;
     }
 
-    private Collection<Position> fillMap(Position position, String regex) {
+    private Collection<Position2D> fillMap(Position2D position, String regex) {
         map[position.x - minx][position.y - miny] = '.';
         for (int i = 0; i < regex.length(); ++i) {
             if (regex.charAt(i) == 'N') {
@@ -149,11 +149,11 @@ public class Day20 {
             } else if (regex.charAt(i) == '(') {
                 List<String> subs = subexpression(regex.substring(i));
                 int subsLength = subs.stream().mapToInt(String::length).sum() + subs.size();
-                Set<Position> positions = new HashSet<>();
+                Set<Position2D> positions = new HashSet<>();
                 for (String sub : subs) {
                     positions.addAll(fillMap(position, sub));
                 }
-                for (Position pos : positions) {
+                for (Position2D pos : positions) {
                     fillMap(pos, regex.substring(i + subsLength + 1));
                 }
                 i += regex.length();
@@ -184,7 +184,7 @@ public class Day20 {
         System.out.println("----------------------");
     }
 
-    private Collection<Position> findBox(Position position, String regex) {
+    private Collection<Position2D> findBox(Position2D position, String regex) {
         for (int i = 0; i < regex.length(); ++i) {
             if (regex.charAt(i) == 'N') {
                 position = position.up().up();
@@ -201,11 +201,11 @@ public class Day20 {
             } else if (regex.charAt(i) == '(') {
                 List<String> subs = subexpression(regex.substring(i));
                 int subsLength = subs.stream().mapToInt(String::length).sum() + subs.size();
-                Set<Position> positions = new HashSet<>();
+                Set<Position2D> positions = new HashSet<>();
                 for (String sub : subs) {
                     positions.addAll(findBox(position, sub));
                 }
-                for (Position pos : positions) {
+                for (Position2D pos : positions) {
                     findBox(pos, regex.substring(i + subsLength + 1));
                 }
                 i += regex.length();
@@ -251,7 +251,7 @@ public class Day20 {
         //printMap();
     }
 
-    private void recalculateBox(Position position) {
+    private void recalculateBox(Position2D position) {
         minx = Math.min(minx, position.x);
         maxx = Math.max(maxx, position.x);
         miny = Math.min(miny, position.y);

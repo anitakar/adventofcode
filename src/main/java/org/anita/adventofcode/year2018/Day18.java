@@ -1,8 +1,7 @@
 package org.anita.adventofcode.year2018;
 
-import org.anita.adventofcode.structures.Position;
+import org.anita.adventofcode.structures.Position2D;
 
-import java.awt.*;
 import java.util.List;
 
 public class Day18 {
@@ -39,7 +38,7 @@ public class Day18 {
             char[][] newMap = new char[map.length][map[0].length];
             for (int y = 0; y < map[0].length; ++y) {
                 for (int x = 0; x < map.length; ++x) {
-                    String neighboursSummary = getNeighbours(new Position(x, y));
+                    String neighboursSummary = getNeighbours(new Position2D(x, y));
                     if (map[x][y] == '.') {
                         int treesCount = 0;
                         for (Character c : neighboursSummary.toCharArray()) {
@@ -100,9 +99,9 @@ public class Day18 {
         return woodSum * lumberSum;
     }
 
-    private String getNeighbours(Position position) {
+    private String getNeighbours(Position2D position) {
         StringBuilder result = new StringBuilder();
-        for (Position neighbour : position.allNeighbours()) {
+        for (Position2D neighbour : position.allNeighbours()) {
             if (inArea(neighbour)) {
                 result.append(map[neighbour.x][neighbour.y]);
             }
@@ -110,7 +109,7 @@ public class Day18 {
         return result.toString();
     }
 
-    private boolean inArea(Position position) {
+    private boolean inArea(Position2D position) {
         return position.x >= 0 && position.x < map.length && position.y >= 0 && position.y < map[0].length;
     }
 

@@ -1,6 +1,6 @@
 package org.anita.adventofcode.year2018;
 
-import org.anita.adventofcode.structures.Position;
+import org.anita.adventofcode.structures.Position2D;
 
 import java.util.Iterator;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.TreeMap;
 public class Day13 {
 
     char[][] track;
-    TreeMap<Position, Cart> carts = new TreeMap<>();
+    TreeMap<Position2D, Cart> carts = new TreeMap<>();
 
     public Day13(List<String> lines) {
         parseMap(lines);
@@ -27,10 +27,10 @@ public class Day13 {
         for (String line : lines) {
             for (int x = 0; x < line.length(); ++x) {
                 if (line.charAt(x) == '>' || line.charAt(x) == '<') {
-                    carts.put(new Position(x, y), new Cart(line.charAt(x), new Position(x, y)));
+                    carts.put(new Position2D(x, y), new Cart(line.charAt(x), new Position2D(x, y)));
                     track[x][y] = '-';
                 } else if (line.charAt(x) == '^' || line.charAt(x) == 'v') {
-                    carts.put(new Position(x, y), new Cart(line.charAt(x), new Position(x, y)));
+                    carts.put(new Position2D(x, y), new Cart(line.charAt(x), new Position2D(x, y)));
                     track[x][y] = '|';
                 } else if (line.charAt(x) != ' ' && line.charAt(x) != '\n') {
                     track[x][y] = line.charAt(x);
@@ -40,31 +40,31 @@ public class Day13 {
         }
     }
 
-    public Position task1() {
+    public Position2D task1() {
         while (true) {
-            TreeMap<Position, Cart> after = new TreeMap<>();
-            Iterator<Position> iterator = carts.navigableKeySet().iterator();
+            TreeMap<Position2D, Cart> after = new TreeMap<>();
+            Iterator<Position2D> iterator = carts.navigableKeySet().iterator();
             while (iterator.hasNext()) {
-                Position position = iterator.next();
+                Position2D position = iterator.next();
                 Cart cart = carts.get(position);
                 cart.move();
                 if (carts.containsKey(cart.position) || after.containsKey(cart.position)) {
                     return cart.position;
                 }
                 iterator.remove();
-                after.put(new Position(cart.position.x, cart.position.y), cart);
+                after.put(new Position2D(cart.position.x, cart.position.y), cart);
             }
             carts = after;
             //printMap();
         }
     }
 
-    public Position task2() {
+    public Position2D task2() {
         while (carts.size() > 1) {
-            TreeMap<Position, Cart> after = new TreeMap<>();
-            Iterator<Position> iterator = carts.navigableKeySet().iterator();
+            TreeMap<Position2D, Cart> after = new TreeMap<>();
+            Iterator<Position2D> iterator = carts.navigableKeySet().iterator();
             while (iterator.hasNext()) {
-                Position position = iterator.next();
+                Position2D position = iterator.next();
                 Cart cart = carts.get(position);
                 if (cart.crashed) {
                     iterator.remove();
@@ -79,15 +79,15 @@ public class Day13 {
                     after.get(cart.position).crashed = true;
                 } else {
                     iterator.remove();
-                    after.put(new Position(cart.position.x, cart.position.y), cart);
+                    after.put(new Position2D(cart.position.x, cart.position.y), cart);
                 }
             }
             carts = new TreeMap<>();
             iterator = after.navigableKeySet().iterator();
             while (iterator.hasNext()) {
-                Position position = iterator.next();
+                Position2D position = iterator.next();
                 if (!after.get(position).crashed) {
-                    carts.put(new Position(position.x, position.y), after.get(position));
+                    carts.put(new Position2D(position.x, position.y), after.get(position));
                 }
             }
             //printMap();
@@ -99,8 +99,8 @@ public class Day13 {
     public void printMap() {
         for (int y = 0; y < track[0].length; ++y) {
             for (int x = 0; x < track.length; ++x) {
-                if (carts.containsKey(new Position(x, y))) {
-                    System.out.print(carts.get(new Position(x, y)).direction);
+                if (carts.containsKey(new Position2D(x, y))) {
+                    System.out.print(carts.get(new Position2D(x, y)).direction);
                 } else if (track[x][y] == 0) {
                     System.out.print(' ');
                 } else {
@@ -115,10 +115,10 @@ public class Day13 {
     class Cart {
         char direction;
         int nextTurn = 0; //0-left, 1-straight, 2-right
-        Position position;
+        Position2D position;
         boolean crashed = false;
 
-        public Cart(char direction, Position position) {
+        public Cart(char direction, Position2D position) {
             this.direction = direction;
             this.position = position;
         }

@@ -18,6 +18,7 @@ public class Day6Test {
 
         day6.performInstructions(instructions);
         Assert.assertEquals(day6.numberOfLightsLit(), 400410);
+        day6.printMap();
     }
 
     @Test
@@ -28,5 +29,6 @@ public class Day6Test {
 
         day6.performInstructions2(instructions);
         Assert.assertEquals(day6.numberOfLightsLit(), 15343601);
+        day6.printMap();
     }
 }

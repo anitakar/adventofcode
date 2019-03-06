@@ -1,5 +1,6 @@
 package org.anita.adventofcode.year2015;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import javax.xml.bind.DatatypeConverter;
@@ -31,7 +32,7 @@ public class Day4Test {
                 break;
             }
         }
-        System.out.println(result);
+        Assert.assertEquals(117946, result);
     }
 
     @Test
@@ -44,7 +45,7 @@ public class Day4Test {
                 break;
             }
         }
-        System.out.println(result);
+        Assert.assertEquals(3938038, result);
     }
 
 }

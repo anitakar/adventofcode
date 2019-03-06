@@ -28,6 +28,15 @@ public class Day6 {
         return numberLit;
     }
 
+    public void printMap() {
+        for (int j = 0; j < 1000; ++j) {
+            for (int i = 0; i < 1000; ++i) {
+                System.out.print(grid[i][j]);
+            }
+            System.out.println();
+        }
+    }
+
     class Instruction {
         int operation;
         Position2D from, to;

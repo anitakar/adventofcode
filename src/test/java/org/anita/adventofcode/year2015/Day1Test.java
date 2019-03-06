@@ -1,6 +1,7 @@
 package org.anita.adventofcode.year2015;
 
 import org.anita.adventofcode.util.FileUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -14,14 +15,14 @@ public class Day1Test {
     public void testTask1() throws IOException {
         InputStream inputStream = getClass().getResourceAsStream("/2015_1.txt");
         String floors = FileUtils.readStringsLineByLine(inputStream).get(0);
-        System.out.println(day1.floors(floors));
+        Assert.assertEquals(232, day1.floors(floors));
     }
 
     @Test
     public void testTask2() throws IOException {
         InputStream inputStream = getClass().getResourceAsStream("/2015_1.txt");
         String floors = FileUtils.readStringsLineByLine(inputStream).get(0);
-        System.out.println(day1.basementPosition(floors));
+        Assert.assertEquals(1783, day1.basementPosition(floors));
     }
 
 }

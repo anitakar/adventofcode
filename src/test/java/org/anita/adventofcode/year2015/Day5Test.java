@@ -29,7 +29,7 @@ public class Day5Test {
         InputStream inputStream = getClass().getResourceAsStream("/2015_5.txt");
         List<String> words = FileUtils.readStringsLineByLine(inputStream);
         long count = words.stream().filter(w -> day5.isNice(w)).count();
-        System.out.println(count);
+        Assert.assertEquals(238, count);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class Day5Test {
         InputStream inputStream = getClass().getResourceAsStream("/2015_5.txt");
         List<String> words = FileUtils.readStringsLineByLine(inputStream);
         long count = words.stream().filter(w -> day5.isNice2(w)).count();
-        System.out.println(count);
+        Assert.assertEquals(69, count);
     }
 
 }

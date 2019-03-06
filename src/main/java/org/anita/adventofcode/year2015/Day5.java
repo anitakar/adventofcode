@@ -1,14 +1,10 @@
 package org.anita.adventofcode.year2015;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class Day5 {
-
-    private MessageDigest md;
 
     public Day5() {
     }

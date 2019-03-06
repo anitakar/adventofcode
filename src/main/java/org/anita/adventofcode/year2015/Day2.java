@@ -1,11 +1,8 @@
 package org.anita.adventofcode.year2015;
 
-import java.security.MessageDigest;
 import java.util.List;
 
 public class Day2 {
-
-    private MessageDigest md;
 
     public int wrapping(List<int[]> dims) {
         int totalWrapping = 0;

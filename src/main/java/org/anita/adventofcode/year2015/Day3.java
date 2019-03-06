@@ -2,12 +2,9 @@ package org.anita.adventofcode.year2015;
 
 import org.anita.adventofcode.structures.Position2D;
 
-import java.security.MessageDigest;
 import java.util.HashSet;
 
 public class Day3 {
-
-    private MessageDigest md;
 
     public int numUniqueHouses(String path) {
         HashSet<Position2D> visitedPositions = new HashSet<>();

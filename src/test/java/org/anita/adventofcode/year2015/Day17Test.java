@@ -6,6 +6,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Day17Test {
@@ -25,6 +27,26 @@ public class Day17Test {
         List<Integer> containers = FileUtils.readIntsLineByLine(inputStream);
 
         int combinations = Day17.bruteForce(containers, 150);
-        Assert.assertEquals(4, combinations);
+        Assert.assertEquals(1638, combinations);
+    }
+
+    @Test
+    public void examplePart2() throws IOException {
+        InputStream inputStream = getClass().getResourceAsStream("/2015_17_1.txt");
+        List<Integer> containers = FileUtils.readIntsLineByLine(inputStream);
+
+        long numberOfCombinations = Day17.bruteForceCombinations(containers, 25);
+
+        Assert.assertEquals(3, numberOfCombinations);
+    }
+
+    @Test
+    public void testPart2() throws IOException {
+        InputStream inputStream = getClass().getResourceAsStream("/2015_17_2.txt");
+        List<Integer> containers = FileUtils.readIntsLineByLine(inputStream);
+
+        long numberOfCombinations = Day17.bruteForceCombinations(containers, 150);
+
+        Assert.assertEquals(17, numberOfCombinations);
     }
 }

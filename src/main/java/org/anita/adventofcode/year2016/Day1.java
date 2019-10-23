@@ -44,6 +44,7 @@ public class Day1 {
         int xDistance = 0;
         int yDistance = 0;
         int currentDirection = 0; // N, E, S, W
+        Position2D pos = new Position2D(xDistance, yDistance);
         for (String move : moves) {
             char turn = move.charAt(0);
             if (turn == 'R') {
@@ -56,7 +57,7 @@ public class Day1 {
                 case 0: {
                     int steps = Integer.parseInt(move.substring(1));
                     for (int i = 1; i <= steps; ++i) {
-                        Position2D pos = new Position2D(xDistance, yDistance + i);
+                        pos = pos.up();
                         if (visited.contains(pos)) {
                             return pos.manhattanDistance(new Position2D(0, 0));
                         } else {
@@ -69,7 +70,7 @@ public class Day1 {
                 case 1: {
                     int steps = Integer.parseInt(move.substring(1));
                     for (int i = 1; i <= steps; ++i) {
-                        Position2D pos = new Position2D(xDistance + i, yDistance);
+                        pos = pos.right();
                         if (visited.contains(pos)) {
                             return pos.manhattanDistance(new Position2D(0, 0));
                         } else {
@@ -82,7 +83,7 @@ public class Day1 {
                 case 2: {
                     int steps = Integer.parseInt(move.substring(1));
                     for (int i = 1; i <= steps; ++i) {
-                        Position2D pos = new Position2D(xDistance, yDistance - i);
+                        pos = pos.down();
                         if (visited.contains(pos)) {
                             return pos.manhattanDistance(new Position2D(0, 0));
                         } else {
@@ -95,7 +96,7 @@ public class Day1 {
                 case 3: {
                     int steps = Integer.parseInt(move.substring(1));
                     for (int i = 1; i <= steps; ++i) {
-                        Position2D pos = new Position2D(xDistance - i, yDistance);
+                        pos = pos.left();
                         if (visited.contains(pos)) {
                             return pos.manhattanDistance(new Position2D(0, 0));
                         } else {

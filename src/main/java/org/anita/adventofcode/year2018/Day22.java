@@ -10,38 +10,40 @@ public class Day22 {
     long[][] map;
 
     public int task1(int x, int y, int depth) {
-        calculateMap(x, y, depth);
+        calculateMap(x, y, depth, x, y);
 
         int totalRiskLevel = 0;
         for (int i = 0; i <= x; ++i) {
             for (int j = 0; j <= y; ++j) {
-                totalRiskLevel += map[i][j];
+                totalRiskLevel += map[j][i];
             }
         }
         return totalRiskLevel;
     }
 
-    private void calculateMap(int x, int y, int depth) {
-        map = new long[x + 1][y + 1];
+    private void calculateMap(int x, int y, int depth, int maxx, int maxy) {
+        map = new long[maxy + 1][maxx + 1];
 
         map[0][0] = 0;
-        map[x][y] = 0;
-        for (int i = 0; i <= x; ++i) {
-            map[i][0] = i * 16807;
+        map[y][x] = 0;
+        for (int i = 1; i <= maxx; ++i) {
+            map[0][i] = i * 16807;
         }
-        for (int i = 0; i <= y; ++i) {
-            map[0][i] = i * 48271;
+        for (int i = 1; i <= maxy; ++i) {
+            map[i][0] = i * 48271;
         }
-        for (int i = 1; i <= x; ++i) {
-            for (int j = 1; j <= y; ++j) {
-                map[i][j] = erosionLevel(map[i - 1][j], depth) * erosionLevel(map[i][j - 1], depth);
+        for (int i = 1; i <= maxx; ++i) {
+            for (int j = 1; j <= maxy; ++j) {
+                if (i != x || j != y) {
+                    map[j][i] = erosionLevel(map[j - 1][i], depth) * erosionLevel(map[j][i - 1], depth);
+                }
             }
         }
-        map[x][y] = 0;
+        map[y][x] = 0;
 
-        for (int i = 0; i <= x; ++i) {
-            for (int j = 0; j <= y; ++j) {
-                map[i][j] = erosionLevel(map[i][j], depth) % 3;
+        for (int i = 0; i <= maxx; ++i) {
+            for (int j = 0; j <= maxy; ++j) {
+                map[j][i] = erosionLevel(map[j][i], depth) % 3;
             }
         }
     }
@@ -63,11 +65,11 @@ public class Day22 {
     private int currentMinDistance = Integer.MAX_VALUE;
     HashMap<CavePosition, CavePosition> toVisitElems = new HashMap<>();
     PriorityQueue<CavePosition> toVisit = new PriorityQueue<>(new CavePositionComparator());
-    public int task2(int x, int y, int depth) {
-        calculateMap(x + 3, y + 3, depth);
+    public int task2(int x, int y, int depth, int maxx, int maxy) {
+        calculateMap(x, y, depth, maxx, maxy);
 
         targetPosition = new Position2D(x, y);
-        CavePosition start = new CavePosition(new Position2D(0, 0), 0, TORCH);
+        CavePosition start = new CavePosition(new Position2D(0, 0), 0, TORCH, null);
         toVisit.add(start);
         toVisitElems.put(start, start);
 
@@ -91,6 +93,8 @@ public class Day22 {
                 }
                 if (minDistance < currentMinDistance) {
                     currentMinDistance = minDistance;
+                    System.out.println(currentMinDistance);
+                    toVisit.removeIf(e -> e.cost + e.pos.manhattanDistance(targetPosition) >= currentMinDistance);
                 }
             }
         }
@@ -109,13 +113,13 @@ public class Day22 {
         if (withinBounds(toAdd)) {
             List<Pair<Integer, Integer>> costs = cost(toAdd, current.gear);
             for (Pair<Integer, Integer> cost : costs) {
-                CavePosition caveToVisit = new CavePosition(toAdd, current.cost + cost.getKey(), cost.getValue());
+                CavePosition caveToVisit = new CavePosition(toAdd, current.cost + cost.getKey(), cost.getValue(), current);
                 if (caveToVisit.cost > currentMinDistance) {
                     continue;
                 }
                 if (toVisit.contains(caveToVisit)) {
                     CavePosition prev = toVisitElems.get(caveToVisit);
-                    if (prev.cost < caveToVisit.cost) {
+                    if (prev.cost <= caveToVisit.cost) {
                         continue;
                     } else if (!betterThanVisited(caveToVisit)) {
                         continue;
@@ -149,11 +153,11 @@ public class Day22 {
     }
 
     private boolean withinBounds(Position2D current) {
-        return current.x >= 0 && current.y >= 0 && current.x < map.length && current.y < map[0].length;
+        return current.x >= 0 && current.y >= 0 && current.y < map.length && current.x < map[0].length;
     }
 
     private List<Pair<Integer, Integer>> cost(Position2D target, int currentEquipment) {
-        long targetRegionType = map[target.x][target.y];
+        long targetRegionType = map[target.y][target.x];
         if (targetRegionType == ROCKY) {
             if (currentEquipment == CLIMBING_GEAR || currentEquipment == TORCH) {
                 return Collections.singletonList(new Pair<>(1, currentEquipment));
@@ -179,11 +183,13 @@ public class Day22 {
         final Position2D pos;
         final int cost;
         final int gear;
+        final CavePosition prev;
 
-        CavePosition(Position2D pos, int cost, int gear) {
+        CavePosition(Position2D pos, int cost, int gear, CavePosition prev) {
             this.pos = pos;
             this.cost = cost;
             this.gear = gear;
+            this.prev = prev;
         }
 
         @Override
@@ -206,6 +212,7 @@ public class Day22 {
                     "pos=" + pos +
                     ", cost=" + cost +
                     ", gear=" + gear +
+                    ", prev=" + prev +
                     '}';
         }
     }

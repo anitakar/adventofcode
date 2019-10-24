@@ -17,14 +17,12 @@ public class Day22Test {
     }
 
     @Test
-    @Ignore
     public void task2Test1() {
-        Assert.assertEquals(45, new Day22().task2(10, 10, 510));
+        Assert.assertEquals(45, new Day22().task2(10, 10, 510, 13, 13));
     }
 
     @Test
-    @Ignore
     public void task2() {
-        Assert.assertEquals(45, new Day22().task2(9, 751, 11817));
+        Assert.assertEquals(1025, new Day22().task2(9, 751, 11817, 100, 1100));
     }
 }

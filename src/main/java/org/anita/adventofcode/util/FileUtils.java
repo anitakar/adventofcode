@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -32,11 +34,28 @@ public class FileUtils {
         return result;
     }
 
+    public static <T> List<T> readElementsLineByLine(InputStream inputStream, BiFunction<String, Integer, T> lineParser) throws IOException {
+        List<T> result = new ArrayList<>();
+        consumeElementsLineByLine(inputStream, (line, lineNum) -> result.add(lineParser.apply(line, lineNum)));
+        return result;
+    }
+
     public static void consumeElementsLineByLine(InputStream inputStream, Consumer<String> lineParser) throws IOException {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             while((line = bufferedReader.readLine()) != null) {
                 lineParser.accept(line);
+            }
+        }
+    }
+
+    public static void consumeElementsLineByLine(InputStream inputStream, BiConsumer<String, Integer> lineParser) throws IOException {
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            int lineNum = 0;
+            while((line = bufferedReader.readLine()) != null) {
+                lineParser.accept(line, lineNum);
+                lineNum++;
             }
         }
     }

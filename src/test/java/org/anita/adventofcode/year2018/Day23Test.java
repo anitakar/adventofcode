@@ -15,7 +15,7 @@ public class Day23Test {
     public void shouldParseNanobot() {
         String line = "pos=<-66538252,24214519,54774103>, r=94247941";
 
-        Day23.Nanobot nanobot = new Day23().parseNanobot(line);
+        Day23.Nanobot nanobot = new Day23().parseNanobot(line, 1);
 
         Assert.assertEquals(nanobot.x, -66538252);
         Assert.assertEquals(nanobot.y, 24214519);
@@ -42,7 +42,6 @@ public class Day23Test {
     }
 
     @Test
-    @Ignore
     public void task2Test1() throws IOException {
         Day23 day23 = new Day23();
         InputStream inputStream = getClass().getResourceAsStream("/test2day23.txt");
@@ -52,12 +51,11 @@ public class Day23Test {
     }
 
     @Test
-    @Ignore
     public void task2() throws IOException {
         Day23 day23 = new Day23();
         InputStream inputStream = getClass().getResourceAsStream("/day23.txt");
         List<Day23.Nanobot> nanobots = FileUtils.readElementsLineByLine(inputStream, day23::parseNanobot);
 
-        Assert.assertEquals(0, new Day23().task2(nanobots));
+        Assert.assertEquals(88122632, new Day23().task2(nanobots));
     }
 }

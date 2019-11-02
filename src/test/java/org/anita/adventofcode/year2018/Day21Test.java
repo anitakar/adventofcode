@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 
 public class Day21Test {
@@ -51,6 +50,9 @@ public class Day21Test {
                 //==> [0, R[1], 8, R[1], R[4], 1]
                 reassignRegisters1(register);
                 register = new Day19().executeAndPrint(register, 2, program, 20);
+//                System.out.print(register[3] + " , ");
+//                System.out.print(register[4] + " , ");
+//                System.out.println(register[5]);
             }
 //        new Day19().executeAndPrint(new int[]{0, register[4] / 256, 18, register[3], register[4], 0}, 2, program, 1000);
         // 28: R[1] := R[4] == R[0]		// [0, 1, 28, 1, 13443200, 1]

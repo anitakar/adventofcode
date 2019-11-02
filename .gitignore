@@ -3,3 +3,4 @@
 out/
 .attach_pid*
 build/
+/src/main/java/org/anita/adventofcode/year2018/a.out

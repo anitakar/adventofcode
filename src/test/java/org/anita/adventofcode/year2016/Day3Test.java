@@ -22,11 +22,21 @@ public class Day3Test {
     }
 
     @Test
-    public void task1Test1() throws IOException {
+    public void task1() throws IOException {
         Day3 day3 = new Day3();
         InputStream inputStream = getClass().getResourceAsStream("/2016_3.txt");
         List<Day3.Triangle> triangles = FileUtils.readElementsLineByLine(inputStream, day3::parseTriangle);
 
         Assert.assertEquals(869, new Day3().task1(triangles));
+    }
+
+    @Test
+    public void task2() throws IOException {
+        Day3 day3 = new Day3();
+        InputStream inputStream = getClass().getResourceAsStream("/2016_3.txt");
+        List<Day3.Triangle> input = FileUtils.readElementsLineByLine(inputStream, day3::parseTriangle);
+        List<Day3.Triangle> triangles = day3.transposeList(input);
+
+        Assert.assertEquals(1544, new Day3().task1(triangles));
     }
 }

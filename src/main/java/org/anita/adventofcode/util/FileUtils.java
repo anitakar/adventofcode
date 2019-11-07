@@ -64,7 +64,7 @@ public class FileUtils {
         Stream<String> lines = Files.lines(Paths.get(FileUtils.class.getResource(resource).toURI()));
         String line = lines.collect(Collectors.toList()).get(0);
 
-        return Arrays.stream(line.split(" ")).mapToInt(Integer::parseInt).iterator();
+        return Arrays.stream(line.split("\\s*")).mapToInt(Integer::parseInt).iterator();
     }
 
 }

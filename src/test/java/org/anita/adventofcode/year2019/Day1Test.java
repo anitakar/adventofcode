@@ -28,6 +28,6 @@ public class Day1Test {
     public void task2() throws IOException {
         InputStream inputStream = getClass().getResourceAsStream("/2019_1.txt");
         List<Integer> masses = FileUtils.readIntsLineByLine(inputStream);
-        Assert.assertEquals(3394032, new Day1().task2(masses));
+        Assert.assertEquals(5088176, new Day1().task2(masses));
     }
 }

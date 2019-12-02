@@ -67,4 +67,11 @@ public class FileUtils {
         return Arrays.stream(line.split("\\s*")).mapToInt(Integer::parseInt).iterator();
     }
 
+    public static int[] readIntArrayFromSingleLine(String resource, String split) throws URISyntaxException, IOException {
+        Stream<String> lines = Files.lines(Paths.get(FileUtils.class.getResource(resource).toURI()));
+        String line = lines.collect(Collectors.toList()).get(0);
+
+        return Arrays.stream(line.split(split)).mapToInt(Integer::parseInt).toArray();
+    }
+
 }

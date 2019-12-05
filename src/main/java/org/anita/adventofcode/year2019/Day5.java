@@ -47,16 +47,8 @@ public class Day5 {
     }
 
     private void interpretAdd() {
-        int op1Mode = (memory[currentPosition] / 100) % 10;
-        int op1 = memory[currentPosition + 1];
-        if (op1Mode == 0) {
-            op1 = memory[op1];
-        }
-        int op2Mode = (memory[currentPosition] / 1000) % 10;
-        int op2 = memory[currentPosition + 2];
-        if (op2Mode == 0) {
-            op2 = memory[op2];
-        }
+        int op1 = getOp1();
+        int op2 = getOp2();
 
         memory[memory[currentPosition + 3]] = op1 + op2;
 
@@ -64,16 +56,8 @@ public class Day5 {
     }
 
     private void interpretMultiply() {
-        int op1Mode = (memory[currentPosition] / 100) % 10;
-        int op1 = memory[currentPosition + 1];
-        if (op1Mode == 0) {
-            op1 = memory[op1];
-        }
-        int op2Mode = (memory[currentPosition] / 1000) % 10;
-        int op2 = memory[currentPosition + 2];
-        if (op2Mode == 0) {
-            op2 = memory[op2];
-        }
+        int op1 = getOp1();
+        int op2 = getOp2();
 
         memory[memory[currentPosition + 3]] = op1 * op2;
 
@@ -87,26 +71,14 @@ public class Day5 {
     }
 
     private void interpretOutput() {
-        int op1Mode = (memory[currentPosition] / 100) % 10;
-        int value = memory[currentPosition + 1];
-        if (op1Mode == 0) {
-            value = memory[value];
-        }
+        int value = getOp1();
         output.append(value).append(";");
         currentPosition += 2;
     }
 
     private void interpretJumpIfTrue() {
-        int op1Mode = (memory[currentPosition] / 100) % 10;
-        int op1 = memory[currentPosition + 1];
-        if (op1Mode == 0) {
-            op1 = memory[op1];
-        }
-        int op2Mode = (memory[currentPosition] / 1000) % 10;
-        int op2 = memory[currentPosition + 2];
-        if (op2Mode == 0) {
-            op2 = memory[op2];
-        }
+        int op1 = getOp1();
+        int op2 = getOp2();
 
         if (op1 != 0) {
             currentPosition = op2;
@@ -116,16 +88,8 @@ public class Day5 {
     }
 
     private void interpretJumpIfFalse() {
-        int op1Mode = (memory[currentPosition] / 100) % 10;
-        int op1 = memory[currentPosition + 1];
-        if (op1Mode == 0) {
-            op1 = memory[op1];
-        }
-        int op2Mode = (memory[currentPosition] / 1000) % 10;
-        int op2 = memory[currentPosition + 2];
-        if (op2Mode == 0) {
-            op2 = memory[op2];
-        }
+        int op1 = getOp1();
+        int op2 = getOp2();
 
         if (op1 == 0) {
             currentPosition = op2;
@@ -135,44 +99,38 @@ public class Day5 {
     }
 
     private void interpretLessThan() {
-        int op1Mode = (memory[currentPosition] / 100) % 10;
-        int op1 = memory[currentPosition + 1];
-        if (op1Mode == 0) {
-            op1 = memory[op1];
-        }
-        int op2Mode = (memory[currentPosition] / 1000) % 10;
-        int op2 = memory[currentPosition + 2];
-        if (op2Mode == 0) {
-            op2 = memory[op2];
-        }
+        int op1 = getOp1();
+        int op2 = getOp2();
 
-        if (op1 < op2) {
-            memory[memory[currentPosition + 3]] = 1;
-        } else {
-            memory[memory[currentPosition + 3]] = 0;
-        }
+        memory[memory[currentPosition + 3]] = op1 < op2 ? 1 : 0;
 
         currentPosition += 4;
     }
 
     private void interpretEquals() {
+        int op1 = getOp1();
+        int op2 = getOp2();
+
+        memory[memory[currentPosition + 3]] = op1 == op2 ? 1 : 0;
+
+        currentPosition += 4;
+    }
+
+    private int getOp1() {
         int op1Mode = (memory[currentPosition] / 100) % 10;
         int op1 = memory[currentPosition + 1];
         if (op1Mode == 0) {
             op1 = memory[op1];
         }
+        return op1;
+    }
+
+    private int getOp2() {
         int op2Mode = (memory[currentPosition] / 1000) % 10;
         int op2 = memory[currentPosition + 2];
         if (op2Mode == 0) {
             op2 = memory[op2];
         }
-
-        if (op1 == op2) {
-            memory[memory[currentPosition + 3]] = 1;
-        } else {
-            memory[memory[currentPosition + 3]] = 0;
-        }
-
-        currentPosition += 4;
+        return op2;
     }
 }

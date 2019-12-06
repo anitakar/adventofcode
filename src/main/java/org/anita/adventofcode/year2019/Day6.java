@@ -25,6 +25,46 @@ public class Day6 {
         return totalDistance;
     }
 
+    public int task2(List<String> relations) {
+        parse(relations);
+
+        String santaPath = rootPath(planetSystem.get("SAN"));
+        String youPath = rootPath(planetSystem.get("YOU"));
+
+        int i = 0;
+        for (; i < youPath.length(); ++i) {
+            if (youPath.charAt(i) != santaPath.charAt(i)) {
+                break;
+            }
+        }
+
+        int youSteps = 0;
+        for (int j = i; j < youPath.length(); ++j) {
+            if (youPath.charAt(j) == '|') {
+                youSteps += 1;
+            }
+        }
+
+        int santaSteps = 0;
+        for (int j = i; j < santaPath.length(); ++j) {
+            if (santaPath.charAt(j) == '|') {
+                santaSteps += 1;
+            }
+        }
+
+        return youSteps + santaSteps;
+    }
+
+    private String rootPath(SpaceObject obj) {
+        StringBuilder path = new StringBuilder();
+        SpaceObject cur = obj;
+        while (cur != null) {
+            path.append(cur.name).append("|");
+            cur = cur.parent;
+        }
+        return path.reverse().toString();
+    }
+
     private void parse(List<String> relations) {
         for (String relation : relations) {
             String[] objs = relation.split("\\)");

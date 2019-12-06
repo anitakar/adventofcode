@@ -15,7 +15,7 @@ public class Day6Test {
         InputStream resource = getClass().getResourceAsStream("/2019_6_test.txt");
         List<String> relations = FileUtils.readStringsLineByLine(resource);
 
-        Assert.assertEquals(42, new Day6().task1(relations));
+        Assert.assertEquals(54, new Day6().task1(relations));
     }
 
     @Test
@@ -24,5 +24,21 @@ public class Day6Test {
         List<String> relations = FileUtils.readStringsLineByLine(resource);
 
         Assert.assertEquals(301100, new Day6().task1(relations));
+    }
+
+    @Test
+    public void task2Test1() throws IOException {
+        InputStream resource = getClass().getResourceAsStream("/2019_6_test.txt");
+        List<String> relations = FileUtils.readStringsLineByLine(resource);
+
+        Assert.assertEquals(4, new Day6().task2(relations));
+    }
+
+    @Test
+    public void task2() throws IOException {
+        InputStream resource = getClass().getResourceAsStream("/2019_6.txt");
+        List<String> relations = FileUtils.readStringsLineByLine(resource);
+
+        Assert.assertEquals(547, new Day6().task2(relations));
     }
 }

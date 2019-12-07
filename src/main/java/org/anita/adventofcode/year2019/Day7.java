@@ -1,0 +1,180 @@
+package org.anita.adventofcode.year2019;
+
+import java.util.Arrays;
+
+public class Day7 {
+
+    public static class Program {
+        private int[] originalMemory;
+        private int[] phaseSettings;
+
+        public Program(int[] memory, int[] phaseSettings) {
+            this.originalMemory = Arrays.copyOf(memory, memory.length);
+            this.phaseSettings = Arrays.copyOf(phaseSettings, phaseSettings.length);
+        }
+
+        public int interpret() {
+            int[] memory = Arrays.copyOf(originalMemory, originalMemory.length);
+            Amplifier amplifier = new Amplifier(memory, phaseSettings[0], 0);
+            int amplifirerOutput = amplifier.interpret();
+            amplifier = new Amplifier(memory, phaseSettings[1], amplifirerOutput);
+            amplifirerOutput = amplifier.interpret();
+            amplifier = new Amplifier(memory, phaseSettings[2], amplifirerOutput);
+            amplifirerOutput = amplifier.interpret();
+            amplifier = new Amplifier(memory, phaseSettings[3], amplifirerOutput);
+            amplifirerOutput = amplifier.interpret();
+            amplifier = new Amplifier(memory, phaseSettings[4], amplifirerOutput);
+            amplifirerOutput = amplifier.interpret();
+            return amplifirerOutput;
+        }
+    }
+
+    public static class Amplifier {
+
+        private int[] memory;
+        private int currentPosition = 0;
+        private int output = 0;
+        private int phaseSetting;
+        private int input;
+        private boolean phaseRead = false;
+
+        public Amplifier(int[] memory, int phaseSetting, int input) {
+            reset(memory, phaseSetting, input);
+        }
+
+        public int interpret() {
+            int code = memory[currentPosition] % 100;
+
+            while (code != 99) {
+                if (code == 1) {
+                    interpretAdd();
+                } else if (code == 2) {
+                    interpretMultiply();
+                } else if (code == 3) {
+                    interpretInput();
+                } else if (code == 4) {
+                    interpretOutput();
+                } else if (code == 5) {
+                    interpretJumpIfTrue();
+                } else if (code == 6) {
+                    interpretJumpIfFalse();
+                } else if (code == 7) {
+                    interpretLessThan();
+                } else if (code == 8) {
+                    interpretEquals();
+                } else {
+                    throw new RuntimeException();
+                }
+
+                code = memory[currentPosition] % 100;
+            }
+
+            return output;
+        }
+
+        private void reset(int[] memory, int phaseSetting, int input) {
+            this.memory = memory;
+            this.input = input;
+            this.currentPosition = 0;
+            this.output = 0;
+            this.phaseSetting = phaseSetting;
+            this.phaseRead = false;
+        }
+
+        private void interpretAdd() {
+            int op1 = getOp1();
+            int op2 = getOp2();
+
+            memory[memory[currentPosition + 3]] = op1 + op2;
+
+            currentPosition += 4;
+        }
+
+        private void interpretMultiply() {
+            int op1 = getOp1();
+            int op2 = getOp2();
+
+            memory[memory[currentPosition + 3]] = op1 * op2;
+
+            currentPosition += 4;
+        }
+
+        private void interpretInput() {
+            int pos = memory[currentPosition + 1];
+            int value = 0;
+            if (phaseRead) {
+                value = input;
+            } else {
+                value = phaseSetting;
+                phaseRead = true;
+            }
+
+            memory[pos] = value;
+            currentPosition += 2;
+        }
+
+        private void interpretOutput() {
+            int value = getOp1();
+            output = value;
+            currentPosition += 2;
+        }
+
+        private void interpretJumpIfTrue() {
+            int op1 = getOp1();
+            int op2 = getOp2();
+
+            if (op1 != 0) {
+                currentPosition = op2;
+            } else {
+                currentPosition += 3;
+            }
+        }
+
+        private void interpretJumpIfFalse() {
+            int op1 = getOp1();
+            int op2 = getOp2();
+
+            if (op1 == 0) {
+                currentPosition = op2;
+            } else {
+                currentPosition += 3;
+            }
+        }
+
+        private void interpretLessThan() {
+            int op1 = getOp1();
+            int op2 = getOp2();
+
+            memory[memory[currentPosition + 3]] = op1 < op2 ? 1 : 0;
+
+            currentPosition += 4;
+        }
+
+        private void interpretEquals() {
+            int op1 = getOp1();
+            int op2 = getOp2();
+
+            memory[memory[currentPosition + 3]] = op1 == op2 ? 1 : 0;
+
+            currentPosition += 4;
+        }
+
+        private int getOp1() {
+            int op1Mode = (memory[currentPosition] / 100) % 10;
+            int op1 = memory[currentPosition + 1];
+            if (op1Mode == 0) {
+                op1 = memory[op1];
+            }
+            return op1;
+        }
+
+        private int getOp2() {
+            int op2Mode = (memory[currentPosition] / 1000) % 10;
+            int op2 = memory[currentPosition + 2];
+            if (op2Mode == 0) {
+                op2 = memory[op2];
+            }
+            return op2;
+        }
+    }
+}

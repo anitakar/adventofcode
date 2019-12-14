@@ -134,6 +134,6 @@ public class Day7Test {
             }
         }
 
-        Assert.assertEquals(0, maxOutput);
+        Assert.assertEquals(57660948, maxOutput);
     }
 }

@@ -51,9 +51,9 @@ public class Day8 {
                 if (pixel == 2) {
                     System.out.print(" ");
                 } else if (pixel == 1) {
-                    System.out.print("1");
+                    System.out.print("X");
                 } else if (pixel == 0) {
-                    System.out.print("0");
+                    System.out.print(" ");
                 }
             }
             System.out.println();

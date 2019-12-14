@@ -14,29 +14,27 @@ public class Day7 {
         }
 
         public int interpret1() {
-            int[] memory = Arrays.copyOf(originalMemory, originalMemory.length);
-            Amplifier amplifier = new Amplifier(memory, new int[]{phaseSettings[0], 0});
+            Amplifier amplifier = new Amplifier(Arrays.copyOf(originalMemory, originalMemory.length), new int[]{phaseSettings[0], 0});
             int amplifirerOutput = amplifier.interpret();
-            amplifier = new Amplifier(memory, new int[]{phaseSettings[1], amplifirerOutput});
+            amplifier = new Amplifier(Arrays.copyOf(originalMemory, originalMemory.length), new int[]{phaseSettings[1], amplifirerOutput});
             amplifirerOutput = amplifier.interpret();
-            amplifier = new Amplifier(memory, new int[]{phaseSettings[2], amplifirerOutput});
+            amplifier = new Amplifier(Arrays.copyOf(originalMemory, originalMemory.length), new int[]{phaseSettings[2], amplifirerOutput});
             amplifirerOutput = amplifier.interpret();
-            amplifier = new Amplifier(memory, new int[]{phaseSettings[3], amplifirerOutput});
+            amplifier = new Amplifier(Arrays.copyOf(originalMemory, originalMemory.length), new int[]{phaseSettings[3], amplifirerOutput});
             amplifirerOutput = amplifier.interpret();
-            amplifier = new Amplifier(memory, new int[]{phaseSettings[4], amplifirerOutput});
+            amplifier = new Amplifier(Arrays.copyOf(originalMemory, originalMemory.length), new int[]{phaseSettings[4], amplifirerOutput});
             amplifirerOutput = amplifier.interpret();
             return amplifirerOutput;
         }
 
         public int interpret2() {
-            int[] memory = Arrays.copyOf(originalMemory, originalMemory.length);
             int signal = 0;
             boolean isHalted = false;
-            Amplifier amplifier1 = new Amplifier(memory, new int[]{phaseSettings[0], signal});
-            Amplifier amplifier2 = new Amplifier(memory, new int[]{phaseSettings[1], signal});
-            Amplifier amplifier3 = new Amplifier(memory, new int[]{phaseSettings[2], signal});
-            Amplifier amplifier4 = new Amplifier(memory, new int[]{phaseSettings[3], signal});
-            Amplifier amplifier5 = new Amplifier(memory, new int[]{phaseSettings[4], signal});
+            Amplifier amplifier1 = new Amplifier(Arrays.copyOf(originalMemory, originalMemory.length), new int[]{phaseSettings[0], signal});
+            Amplifier amplifier2 = new Amplifier(Arrays.copyOf(originalMemory, originalMemory.length), new int[]{phaseSettings[1], signal});
+            Amplifier amplifier3 = new Amplifier(Arrays.copyOf(originalMemory, originalMemory.length), new int[]{phaseSettings[2], signal});
+            Amplifier amplifier4 = new Amplifier(Arrays.copyOf(originalMemory, originalMemory.length), new int[]{phaseSettings[3], signal});
+            Amplifier amplifier5 = new Amplifier(Arrays.copyOf(originalMemory, originalMemory.length), new int[]{phaseSettings[4], signal});
             while (!isHalted) {
                 signal = amplifier1.interpret();
                 amplifier2.setSignal(signal);
@@ -50,7 +48,7 @@ public class Day7 {
                 amplifier1.setSignal(signal);
                 isHalted = amplifier5.isHalted();
             }
-            return signal;
+            return amplifier5.getOutput();
         }
     }
 
@@ -69,6 +67,10 @@ public class Day7 {
 
         public int interpret() {
             //currentPosition = 0;
+            //inputIndex = 0;
+            if (isHalted()) {
+                return output;
+            }
             code = memory[currentPosition] % 100;
 
             while (code != 99) {
@@ -107,6 +109,10 @@ public class Day7 {
 
         public void setSignal(int signal) {
             inputs[1] = signal;
+        }
+
+        public int getOutput() {
+            return output;
         }
 
         private void reset(int[] memory, int[] inputs) {
@@ -150,7 +156,6 @@ public class Day7 {
             int value = getOp1();
             output = value;
             currentPosition += 2;
-            System.out.print("; Output: " + output);
         }
 
         private void interpretJumpIfTrue() {

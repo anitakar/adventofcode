@@ -14,7 +14,7 @@ public class Day8Test {
         InputStream stream = getClass().getResourceAsStream("/2019_8.txt");
         String image = FileUtils.readStringsLineByLine(stream).get(0);
 
-        Assert.assertEquals(0, new Day8().task1(image, 25, 6));
+        Assert.assertEquals(1560, new Day8().task1(image, 25, 6));
     }
 
     @Test

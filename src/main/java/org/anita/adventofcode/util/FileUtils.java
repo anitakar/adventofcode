@@ -74,4 +74,11 @@ public class FileUtils {
         return Arrays.stream(line.split(split)).mapToInt(Integer::parseInt).toArray();
     }
 
+    public static long[] readLongArrayFromSingleLine(String resource, String split) throws URISyntaxException, IOException {
+        Stream<String> lines = Files.lines(Paths.get(FileUtils.class.getResource(resource).toURI()));
+        String line = lines.collect(Collectors.toList()).get(0);
+
+        return Arrays.stream(line.split(split)).mapToLong(Long::parseLong).toArray();
+    }
+
 }

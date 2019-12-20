@@ -10,11 +10,12 @@ public class IntCodeComputer {
     private long[] memory;
     private long currentPosition = 0;
     private List<Long> output = new LinkedList<>();
-    private long input;
+    private long[] input;
     private long relativeBase = 0;
     private Map<Long, Long> additionalMemory = new HashMap<>();
+    private int inputPosition = 0;
 
-    public long[] interpret(long[] memory, long input) {
+    public long[] interpret(long[] memory, long[] input) {
         reset(memory, input);
 
         long code = accessMemory(currentPosition);
@@ -48,12 +49,14 @@ public class IntCodeComputer {
         return output.stream().mapToLong(i -> i).toArray();
     }
 
-    private void reset(long[] memory, long input) {
+    private void reset(long[] memory, long[] input) {
         this.memory = memory;
         this.input = input;
         this.currentPosition = 0;
         this.output = new LinkedList<>();
         this.relativeBase = 0;
+        this.inputPosition = 0;
+        this.additionalMemory = new HashMap<>();
     }
 
     private void interpretAdd() {
@@ -77,9 +80,15 @@ public class IntCodeComputer {
     }
 
     private void interpretInput() {
-        long pos = getOp1();
-        storeInMemory(pos, input);
+        long opMode = (accessMemory(currentPosition) / 100) % 10;
+        long position = accessMemory(currentPosition + 1);
+        if (opMode == 2) {
+            position += relativeBase;
+        }
+
+        storeInMemory(position, input[inputPosition]);
         currentPosition += 2;
+        inputPosition++;
     }
 
     private void interpretOutput() {

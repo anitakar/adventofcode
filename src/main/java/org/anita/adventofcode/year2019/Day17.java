@@ -4,7 +4,7 @@ public class Day17 {
 
     public char[][] createMap(long[] memory) {
         IntCodeComputer computer = new IntCodeComputer();
-        long[] output = computer.interpret(memory, 0);
+        long[] output = computer.interpret(memory, new long[]{});
 
         int cols = 0;
         while (((char)(output[cols])) != '\n') {

@@ -1,22 +1,29 @@
 package org.anita.adventofcode.year2019;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class IntCodeComputer {
 
     private long[] memory;
     private long currentPosition = 0;
     private List<Long> output = new LinkedList<>();
-    private long[] input;
     private long relativeBase = 0;
     private Map<Long, Long> additionalMemory = new HashMap<>();
-    private int inputPosition = 0;
+    private Iterator<Long> input;
+    private OutputListener outputListener;
+
+    public void addOutputListener(OutputListener outputListener) {
+        this.outputListener = outputListener;
+    }
+
+
 
     public long[] interpret(long[] memory, long[] input) {
-        reset(memory, input);
+        return interpret(memory, new DefaultInput(input));
+    }
+
+    public long[] interpret(long[] memory, Iterator<Long> input) {
+        set(memory, input);
 
         long code = accessMemory(currentPosition);
 
@@ -49,14 +56,13 @@ public class IntCodeComputer {
         return output.stream().mapToLong(i -> i).toArray();
     }
 
-    private void reset(long[] memory, long[] input) {
+    public List<Long> getOutput() {
+        return output;
+    }
+
+    private void set(long[] memory, Iterator<Long> input) {
         this.memory = memory;
         this.input = input;
-        this.currentPosition = 0;
-        this.output = new LinkedList<>();
-        this.relativeBase = 0;
-        this.inputPosition = 0;
-        this.additionalMemory = new HashMap<>();
     }
 
     private void interpretAdd() {
@@ -86,14 +92,16 @@ public class IntCodeComputer {
             position += relativeBase;
         }
 
-        storeInMemory(position, input[inputPosition]);
+        storeInMemory(position, input.next());
         currentPosition += 2;
-        inputPosition++;
     }
 
     private void interpretOutput() {
         long value = getOp1();
         output.add(value);
+        if (outputListener != null) {
+            outputListener.onOutput(value);
+        }
         currentPosition += 2;
     }
 
@@ -188,5 +196,29 @@ public class IntCodeComputer {
         } else {
             additionalMemory.put(position, value);
         }
+    }
+
+    private static class DefaultInput implements Iterator<Long> {
+
+        long[] input;
+        private int inputPosition = 0;
+
+        DefaultInput(long[] input) {
+            this.input = input;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return inputPosition < input.length - 1;
+        }
+
+        @Override
+        public Long next() {
+            return input[inputPosition++];
+        }
+    }
+
+    public static interface OutputListener {
+        void onOutput(long value);
     }
 }

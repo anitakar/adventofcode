@@ -33,7 +33,7 @@ public class Day11 {
         int minY = env.whitePanels.stream().mapToInt(p -> p.y).min().getAsInt();
         int maxY = env.whitePanels.stream().mapToInt(p -> p.y).max().getAsInt();
 
-        for (int y = minY; y <= maxY; ++y) {
+        for (int y = maxY; y >= minY; --y) {
             for (int x = minX; x <= maxX; ++x) {
                 if (env.whitePanels.contains(new Position2D(x, y))) {
                     System.out.print("X");

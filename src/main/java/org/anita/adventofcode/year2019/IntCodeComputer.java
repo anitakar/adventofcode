@@ -16,8 +16,6 @@ public class IntCodeComputer {
         this.outputListener = outputListener;
     }
 
-
-
     public long[] interpret(long[] memory, long[] input) {
         return interpret(memory, new DefaultInput(input));
     }

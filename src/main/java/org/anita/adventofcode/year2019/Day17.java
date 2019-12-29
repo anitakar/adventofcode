@@ -35,6 +35,8 @@ public class Day17 {
     public long task1(long[] memory) {
         char[][] map = createMap(memory);
 
+        printMap(map);
+
         long sum = 0;
 
         for (int r = 0; r < map.length; ++r) {

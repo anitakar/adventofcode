@@ -1,10 +1,9 @@
 package org.anita.adventofcode.year2020;
 
-import javafx.util.Pair;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.anita.adventofcode.util.Pair;
 
 public class Day5 {
 

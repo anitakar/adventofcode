@@ -1,8 +1,8 @@
 package org.anita.adventofcode.year2020;
 
-import javafx.util.Pair;
 
 import java.util.*;
+import org.anita.adventofcode.util.Pair;
 
 public class Day7 {
 

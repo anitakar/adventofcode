@@ -1,7 +1,7 @@
 package org.anita.adventofcode.year2020;
 
-import javafx.util.Pair;
 import org.anita.adventofcode.util.FileUtils;
+import org.anita.adventofcode.util.Pair;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,9 +1,9 @@
 package org.anita.adventofcode.year2018;
 
-import javafx.util.Pair;
 import org.anita.adventofcode.structures.Position2D;
 
 import java.util.*;
+import org.anita.adventofcode.util.Pair;
 
 public class Day22 {
 
